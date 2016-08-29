@@ -92,7 +92,7 @@ uint64_t rotr64(const uint64_t w, const unsigned c) {
 }
 ```
 
-In C++, we can make use of SSE for 64-bit arithmetics. In browser, when no 64-bit unsigned integer type is available, different engines have different time penalties of this operation.
+In C++, we can make use of SSE for 64-bit arithmetics. In browser, when no 64-bit unsigned long type is available, different engines have different time penalties of this operation.
 
 ## JS Library
 
