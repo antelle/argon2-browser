@@ -127,7 +127,7 @@ Of course, you can use generated asm.js code in node.js but it's not sensible: y
 
 ## Is it used anywhere?
 
-It will be! Argon2 was compiled for KeeWeb project and will be used in the next version: https://github.com/keeweb/keeweb
+It will be! Argon2 was compiled for [KeeWeb](https://github.com/keeweb/keeweb) project (web-based password manager) and will be used in the next version.
 
 Now it's just an experiment. Feel free to checkout and play with it.
 
