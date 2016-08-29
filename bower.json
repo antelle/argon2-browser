@@ -1,0 +1,39 @@
+{
+  "name": "argon2-browser",
+  "authors": [
+    "antelle <dmitryvit@gmail.com>"
+  ],
+  "description": "Argon2 library compiled for browser runtime",
+  "main": "lib/argon2.js",
+  "keywords": [
+    "argon2",
+    "password",
+    "hashing",
+    "hashing",
+    "key",
+    "derivation",
+    "kdf",
+    "password-hashing"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/antelle/argon2-browser",
+  "ignore": [
+    "**/.*",
+    "*.sh",
+    "*.cmake",
+    "*.cc",
+    "*.c",
+    "*.h",
+    "*.o",
+    "img",
+    "argon2",
+    "CMakeFiles",
+    "CMakeCache.txt",
+    "CMakeLists.txt",
+    "Makefile",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
