@@ -72,6 +72,27 @@ It's hard to measure WebAssembly code size because the project is not finished y
 
 Put it simply, it's the same. Some changes were added, though, required to cope with WASM issues. You can always compare it with the original argon2 to check.
 
+## Difficulties
+
+Argon2 is using uint64, which is not supported by JavaScript.
+This function is called ~30M times per one iteration:
+```cpp
+uint64_t fBlaMka(uint64_t x, uint64_t y) {
+    const uint64_t m = UINT64_C(0xFFFFFFFF);
+    const uint64_t xy = (x & m) * (y & m);
+    return x + y + 2 * xy;
+}
+```
+
+And this one:
+```cpp
+uint64_t rotr64(const uint64_t w, const unsigned c) {
+    return (w >> c) | (w << (64 - c));
+}
+```
+
+In C++, we can make use of SSE for 64-bit arithmetics. In browser, when no 64-bit unsigned integer type is available, different engines have different time penalties of this operation.
+
 ## JS Library
 
 Until WASM is mature, js library is using only asm.js at the moment. Here's how to try it.
