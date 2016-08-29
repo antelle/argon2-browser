@@ -38,7 +38,15 @@ Init time + first run time:
 | Edge asm.js             | 65   | 19500     | 18000      |
 | Edge +asm asm.js        | 100  | 2900      | 2850       |
 
-## Environment
+## Test Environment
+
+Environment used to get the numbers above:
+
+Algorithm parameters:
+- iterations: 100
+- memory: 1MiB (1024 KiB)
+- hash length: 32
+- parallelism: 1
 
 - MacBook pro, Intel Core i5, 2.5GHz (x64)
 - Chrome 55.0.2843.0 (Official Build) canary (64-bit), V8 5.5.1
@@ -117,7 +125,7 @@ Of course, you can use generated asm.js code in node.js but it's not sensible: y
 
 ## Is it used anywhere?
 
-It will! Argon2 was compiled for KeeWeb project and will be used in the next version: https://github.com/keeweb/keeweb
+It will be! Argon2 was compiled for KeeWeb project and will be used in the next version: https://github.com/keeweb/keeweb
 
 Now it's just an experiment. Feel free to checkout and play with it.
 
