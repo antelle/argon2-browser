@@ -47,6 +47,8 @@ Algorithm parameters:
 - memory: 1MiB (1024 KiB)
 - hash length: 32
 - parallelism: 1
+- argon2d
+- command line `echo password | ./argon2 somesalt -d -t 1 -m 10 -p 1`
 
 - MacBook pro, Intel Core i5, 2.5GHz (x64)
 - Chrome 55.0.2843.0 (Official Build) canary (64-bit), V8 5.5.1
