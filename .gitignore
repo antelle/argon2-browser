@@ -1,7 +1,7 @@
 /dist
 CMakeFiles
 CMakeCache.txt
-*.cmake
+cmake_install.cmake
 libargon2.a
 libargon2.so
 libargon2.dylib
