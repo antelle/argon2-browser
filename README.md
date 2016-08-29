@@ -96,7 +96,7 @@ In C++, we can make use of SSE for 64-bit arithmetics. In browser, when no 64-bi
 
 ## JS Library
 
-Until WASM is mature, js library is using only asm.js at the moment. Here's how to try it.
+Until WASM is mature, js library is using only asm.js. Here's how to try it.
 
 Install with bower:
 ```bash
