@@ -1,8 +1,3 @@
-#-------------------------------------------------------------------------------
-#   pnacl.toolchain.cmake
-#   Fips cmake toolchain file for cross-compiling to PNaCl.
-#-------------------------------------------------------------------------------
-
 set(NACL_SDK_BUNDLE "pepper_49")
 if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
     set(NACL_SDK_DIRNAME "../fips-sdks/win/nacl_sdk")
