@@ -30,7 +30,7 @@ function calcAsmJs() {
     };
     var ts = now();
     log('Loading script...');
-    loadScript('/dist/argon2-asm.min.js', function() {
+    loadScript('dist/argon2-asm.min.js', function() {
         log('Script loaded in ' + Math.round(now() - ts) + 'ms');
         log('Calculating hash....');
         setTimeout(calcHash, 10);
@@ -69,20 +69,20 @@ function calcBinaryen(method) {
         setStatus: log,
         wasmBinary: null,
         wasmJSMethod: method,
-        asmjsCodeFile: '/dist/argon2.asm.js',
-        wasmBinaryFile: '/dist/argon2.wasm',
-        wasmTextFile: '/dist/argon2.wast'
+        asmjsCodeFile: 'dist/argon2.asm.js',
+        wasmBinaryFile: 'dist/argon2.wasm',
+        wasmTextFile: 'dist/argon2.wast'
     };
 
     log('Loading wasm...');
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/dist/argon2.wasm', true);
+    xhr.open('GET', 'dist/argon2.wasm', true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
         global.Module.wasmBinary = xhr.response;
         var ts = now();
         log('Wasm loaded, loading script...');
-        loadScript('/dist/argon2.js', function() {
+        loadScript('dist/argon2.js', function() {
             log('Script loaded in ' + Math.round(now() - ts) + 'ms');
             log('Calculating hash....');
             setTimeout(calcHash, 10);
