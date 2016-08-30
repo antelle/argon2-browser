@@ -57,6 +57,11 @@ function calcBinaryenBin() {
 function calcBinaryen(method) {
     clearLog();
 
+    if (!global.Wasm) {
+        log('Your browser doesn\'t support WebAssembly, please try it in Chrome Canary or Firefox Nightly with WASM flag enabled');
+        return;
+    }
+
     log('Testing Argon2 using Binaryen ' + method);
     if (global.Module && global.Module.wasmJSMethod === method && global.Module._argon2_hash) {
         log('Calculating hash....');
