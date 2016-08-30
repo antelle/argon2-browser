@@ -94,6 +94,8 @@ uint64_t rotr64(const uint64_t w, const unsigned c) {
 
 In C++, we can make use of SSE for 64-bit arithmetics. In JavaScript, when no 64-bit unsigned long type is available, different engines have different time penalties of this operation.
 
+WASM can support 64-bit integers but it requires compilation with LLVM, and not as asm.js => wasm. But this build is producing bad wasm for now.
+
 ## JS Library
 
 Until WASM is mature, js library is using only asm.js. Here's how to try it.
@@ -166,6 +168,9 @@ Prerequesties:
 - PNaCl sdk
 - CMake
 
+## TODO
+
+Benefit from 64-bit arithmetic by compiling with LLVM WASM backend: `EMCC_WASM_BACKEND=1`
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)

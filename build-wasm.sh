@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export EMCC_WASM_BACKEND=0
+export EMCC_WASM_BACKEND=0 # TODO: set to 1 (but wasm fails for now)
 cmake \
     -DOUTPUT_NAME="argon2" \
     -DCMAKE_TOOLCHAIN_FILE=~/emsdk_portable/emscripten/incoming/cmake/Modules/Platform/Emscripten.cmake \
