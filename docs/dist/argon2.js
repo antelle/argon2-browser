@@ -97539,7 +97539,7 @@ run();
 
 //^wasm.js
 function integrateWasmJS(Module) {
- var method = Module["wasmJSMethod"] || null || "native-wasm,interpret-s-expr";
+ var method = Module["wasmJSMethod"] || Module["wasmJSMethod"] || "native-wasm,interpret-binary" || "native-wasm,interpret-s-expr";
  var wasmTextFile = Module["wasmTextFile"] || "argon2.wast";
  var wasmBinaryFile = Module["wasmBinaryFile"] || "argon2.wasm";
  var asmjsCodeFile = Module["asmjsCodeFile"] || "argon2.asm.js";
@@ -97813,12 +97813,7 @@ if (ENVIRONMENT_IS_NODE) {
   if (!nodePath) nodePath = require("path");
   filename = nodePath["normalize"](filename);
   var ret = nodeFS["readFileSync"](filename);
-  if (!ret && filename != nodePath["resolve"](filename)) {
-   filename = path.join(__dirname, "..", "src", filename);
-   ret = nodeFS["readFileSync"](filename);
-  }
-  if (ret && !binary) ret = ret.toString();
-  return ret;
+  return binary ? ret : ret.toString();
  };
  Module["readBinary"] = function readBinary(filename) {
   var ret = Module["read"](filename, true);
@@ -98016,9 +98011,7 @@ var Runtime = {
  }),
  dynCall: (function(sig, ptr, args) {
   if (args && args.length) {
-   if (!args.splice) args = Array.prototype.slice.call(args);
-   args.splice(0, 0, ptr);
-   return Module["dynCall_" + sig].apply(null, args);
+   return Module["dynCall_" + sig].apply(null, [ ptr ].concat(args));
   } else {
    return Module["dynCall_" + sig].call(null, ptr);
   }
@@ -98051,9 +98044,19 @@ var Runtime = {
   }
   var sigCache = Runtime.funcWrappers[sig];
   if (!sigCache[func]) {
-   sigCache[func] = function dynCall_wrapper() {
-    return Runtime.dynCall(sig, func, arguments);
-   };
+   if (sig.length === 1) {
+    sigCache[func] = function dynCall_wrapper() {
+     return Runtime.dynCall(sig, func);
+    };
+   } else if (sig.length === 2) {
+    sigCache[func] = function dynCall_wrapper(arg) {
+     return Runtime.dynCall(sig, func, [ arg ]);
+    };
+   } else {
+    sigCache[func] = function dynCall_wrapper() {
+     return Runtime.dynCall(sig, func, Array.prototype.slice.call(arguments));
+    };
+   }
   }
   return sigCache[func];
  }),
@@ -98073,13 +98076,13 @@ var Runtime = {
   return ret;
  }),
  dynamicAlloc: (function(size) {
-  var ret = DYNAMICTOP;
-  DYNAMICTOP = DYNAMICTOP + size | 0;
-  DYNAMICTOP = DYNAMICTOP + 15 & -16;
-  if (DYNAMICTOP >= TOTAL_MEMORY) {
+  var ret = HEAP32[DYNAMICTOP_PTR >> 2];
+  var end = (ret + size + 15 | 0) & -16;
+  HEAP32[DYNAMICTOP_PTR >> 2] = end;
+  if (end >= TOTAL_MEMORY) {
    var success = enlargeMemory();
    if (!success) {
-    DYNAMICTOP = ret;
+    HEAP32[DYNAMICTOP_PTR >> 2] = ret;
     return 0;
    }
   }
@@ -98132,8 +98135,9 @@ var cwrap, ccall;
   "stringToC": (function(str) {
    var ret = 0;
    if (str !== null && str !== undefined && str !== 0) {
-    ret = Runtime.stackAlloc((str.length << 2) + 1);
-    writeStringToMemory(str, ret);
+    var len = (str.length << 2) + 1;
+    ret = Runtime.stackAlloc(len);
+    stringToUTF8(str, ret, len);
    }
    return ret;
   })
@@ -98362,7 +98366,7 @@ function allocate(slab, types, allocator, ptr) {
 Module["allocate"] = allocate;
 function getMemory(size) {
  if (!staticSealed) return Runtime.staticAlloc(size);
- if (typeof _sbrk !== "undefined" && !_sbrk.called || !runtimeInitialized) return Runtime.dynamicAlloc(size);
+ if (!runtimeInitialized) return Runtime.dynamicAlloc(size);
  return _malloc(size);
 }
 Module["getMemory"] = getMemory;
@@ -98407,43 +98411,50 @@ function stringToAscii(str, outPtr) {
  return writeAsciiToMemory(str, outPtr, false);
 }
 Module["stringToAscii"] = stringToAscii;
+var UTF8Decoder = typeof TextDecoder !== "undefined" ? new TextDecoder("utf8") : undefined;
 function UTF8ArrayToString(u8Array, idx) {
- var u0, u1, u2, u3, u4, u5;
- var str = "";
- while (1) {
-  u0 = u8Array[idx++];
-  if (!u0) return str;
-  if (!(u0 & 128)) {
-   str += String.fromCharCode(u0);
-   continue;
-  }
-  u1 = u8Array[idx++] & 63;
-  if ((u0 & 224) == 192) {
-   str += String.fromCharCode((u0 & 31) << 6 | u1);
-   continue;
-  }
-  u2 = u8Array[idx++] & 63;
-  if ((u0 & 240) == 224) {
-   u0 = (u0 & 15) << 12 | u1 << 6 | u2;
-  } else {
-   u3 = u8Array[idx++] & 63;
-   if ((u0 & 248) == 240) {
-    u0 = (u0 & 7) << 18 | u1 << 12 | u2 << 6 | u3;
+ var endPtr = idx;
+ while (u8Array[endPtr]) ++endPtr;
+ if (endPtr - idx > 16 && u8Array.subarray && UTF8Decoder) {
+  return UTF8Decoder.decode(u8Array.subarray(idx, endPtr));
+ } else {
+  var u0, u1, u2, u3, u4, u5;
+  var str = "";
+  while (1) {
+   u0 = u8Array[idx++];
+   if (!u0) return str;
+   if (!(u0 & 128)) {
+    str += String.fromCharCode(u0);
+    continue;
+   }
+   u1 = u8Array[idx++] & 63;
+   if ((u0 & 224) == 192) {
+    str += String.fromCharCode((u0 & 31) << 6 | u1);
+    continue;
+   }
+   u2 = u8Array[idx++] & 63;
+   if ((u0 & 240) == 224) {
+    u0 = (u0 & 15) << 12 | u1 << 6 | u2;
    } else {
-    u4 = u8Array[idx++] & 63;
-    if ((u0 & 252) == 248) {
-     u0 = (u0 & 3) << 24 | u1 << 18 | u2 << 12 | u3 << 6 | u4;
+    u3 = u8Array[idx++] & 63;
+    if ((u0 & 248) == 240) {
+     u0 = (u0 & 7) << 18 | u1 << 12 | u2 << 6 | u3;
     } else {
-     u5 = u8Array[idx++] & 63;
-     u0 = (u0 & 1) << 30 | u1 << 24 | u2 << 18 | u3 << 12 | u4 << 6 | u5;
+     u4 = u8Array[idx++] & 63;
+     if ((u0 & 252) == 248) {
+      u0 = (u0 & 3) << 24 | u1 << 18 | u2 << 12 | u3 << 6 | u4;
+     } else {
+      u5 = u8Array[idx++] & 63;
+      u0 = (u0 & 1) << 30 | u1 << 24 | u2 << 18 | u3 << 12 | u4 << 6 | u5;
+     }
     }
    }
-  }
-  if (u0 < 65536) {
-   str += String.fromCharCode(u0);
-  } else {
-   var ch = u0 - 65536;
-   str += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
+   if (u0 < 65536) {
+    str += String.fromCharCode(u0);
+   } else {
+    var ch = u0 - 65536;
+    str += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
+   }
   }
  }
 }
@@ -98524,24 +98535,26 @@ function lengthBytesUTF8(str) {
  return len;
 }
 Module["lengthBytesUTF8"] = lengthBytesUTF8;
+var UTF16Decoder = typeof TextDecoder !== "undefined" ? new TextDecoder("utf-16le") : undefined;
 function demangle(func) {
  var hasLibcxxabi = !!Module["___cxa_demangle"];
  if (hasLibcxxabi) {
   try {
-   var buf = _malloc(func.length);
-   writeStringToMemory(func.substr(1), buf);
+   var s = func.substr(1);
+   var len = lengthBytesUTF8(s) + 1;
+   var buf = _malloc(len);
+   stringToUTF8(s, buf, len);
    var status = _malloc(4);
    var ret = Module["___cxa_demangle"](buf, 0, 0, status);
    if (getValue(status, "i32") === 0 && ret) {
     return Pointer_stringify(ret);
    }
-  } catch (e) {
-   return func;
-  } finally {
+  } catch (e) {} finally {
    if (buf) _free(buf);
    if (status) _free(status);
    if (ret) _free(ret);
   }
+  return func;
  }
  Runtime.warnOnce("warning: build with  -s DEMANGLE_SUPPORT=1  to link in libcxxabi demangling");
  return func;
@@ -98567,15 +98580,11 @@ function jsStackTrace() {
  return err.stack.toString();
 }
 function stackTrace() {
- return demangleAll(jsStackTrace());
+ var js = jsStackTrace();
+ if (Module["extraStackTrace"]) js += "\n" + Module["extraStackTrace"]();
+ return demangleAll(js);
 }
 Module["stackTrace"] = stackTrace;
-function alignMemoryPage(x) {
- if (x % 4096 > 0) {
-  x += 4096 - x % 4096;
- }
- return x;
-}
 var HEAP;
 var buffer;
 var HEAP8, HEAPU8, HEAP16, HEAPU16, HEAP32, HEAPU32, HEAPF32, HEAPF64;
@@ -98592,9 +98601,11 @@ function updateGlobalBufferViews() {
  Module["HEAPF32"] = HEAPF32 = new Float32Array(buffer);
  Module["HEAPF64"] = HEAPF64 = new Float64Array(buffer);
 }
-var STATIC_BASE = 0, STATICTOP = 0, staticSealed = false;
-var STACK_BASE = 0, STACKTOP = 0, STACK_MAX = 0;
-var DYNAMIC_BASE = 0, DYNAMICTOP = 0;
+var STATIC_BASE, STATICTOP, staticSealed;
+var STACK_BASE, STACKTOP, STACK_MAX;
+var DYNAMIC_BASE, DYNAMICTOP_PTR;
+STATIC_BASE = STATICTOP = STACK_BASE = STACKTOP = STACK_MAX = DYNAMIC_BASE = DYNAMICTOP_PTR = 0;
+staticSealed = false;
 function abortOnCannotGrowMemory() {
  abort("Cannot enlarge memory arrays. Either (1) compile with  -s TOTAL_MEMORY=X  with X higher than the current value " + TOTAL_MEMORY + ", (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which adjusts the size at runtime but prevents some optimizations, (3) set Module.TOTAL_MEMORY to a higher value before the program runs, or if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ");
 }
@@ -98620,8 +98631,12 @@ if (Module["buffer"]) {
  buffer = new ArrayBuffer(TOTAL_MEMORY);
 }
 updateGlobalBufferViews();
-HEAP32[0] = 255;
-if (HEAPU8[0] !== 255 || HEAPU8[3] !== 0) throw "Typed arrays 2 must be run on a little-endian system";
+function getTotalMemory() {
+ return TOTAL_MEMORY;
+}
+HEAP32[0] = 1668509029;
+HEAP16[1] = 25459;
+if (HEAPU8[2] !== 115 || HEAPU8[3] !== 99) throw "Runtime error: expected the system to be little-endian!";
 Module["HEAP"] = HEAP;
 Module["buffer"] = buffer;
 Module["HEAP8"] = HEAP8;
@@ -98729,19 +98744,18 @@ function intArrayToString(array) {
 }
 Module["intArrayToString"] = intArrayToString;
 function writeStringToMemory(string, buffer, dontAddNull) {
- var array = intArrayFromString(string, dontAddNull);
- var i = 0;
- while (i < array.length) {
-  var chr = array[i];
-  HEAP8[buffer + i >> 0] = chr;
-  i = i + 1;
+ Runtime.warnOnce("writeStringToMemory is deprecated and should not be called! Use stringToUTF8() instead!");
+ var lastChar, end;
+ if (dontAddNull) {
+  end = buffer + lengthBytesUTF8(string);
+  lastChar = HEAP8[end];
  }
+ stringToUTF8(string, buffer, Infinity);
+ if (dontAddNull) HEAP8[end] = lastChar;
 }
 Module["writeStringToMemory"] = writeStringToMemory;
 function writeArrayToMemory(array, buffer) {
- for (var i = 0; i < array.length; i++) {
-  HEAP8[buffer++ >> 0] = array[i];
- }
+ HEAP8.set(array, buffer);
 }
 Module["writeArrayToMemory"] = writeArrayToMemory;
 function writeAsciiToMemory(str, buffer, dontAddNull) {
@@ -98829,43 +98843,47 @@ var STATIC_BUMP = 3392;
 var tempDoublePtr = STATICTOP;
 STATICTOP += 16;
 Module["_i64Subtract"] = _i64Subtract;
-function _sbrk(bytes) {
- var self = _sbrk;
- if (!self.called) {
-  DYNAMICTOP = alignMemoryPage(DYNAMICTOP);
-  self.called = true;
-  assert(Runtime.dynamicAlloc);
-  self.alloc = Runtime.dynamicAlloc;
-  Runtime.dynamicAlloc = (function() {
-   abort("cannot dynamically allocate, sbrk now has control");
-  });
- }
- var ret = DYNAMICTOP;
- if (bytes != 0) {
-  var success = self.alloc(bytes);
-  if (!success) return -1 >>> 0;
- }
- return ret;
+function ___setErrNo(value) {
+ if (Module["___errno_location"]) HEAP32[Module["___errno_location"]() >> 2] = value;
+ return value;
 }
+Module["_sbrk"] = _sbrk;
 Module["_i64Add"] = _i64Add;
+Module["_pthread_self"] = _pthread_self;
 Module["_memset"] = _memset;
 Module["_bitshift64Lshr"] = _bitshift64Lshr;
 Module["_bitshift64Shl"] = _bitshift64Shl;
 function _abort() {
  Module["abort"]();
 }
+var cttz_i8 = allocate([ 8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0 ], "i8", ALLOC_STATIC);
+function _llvm_cttz_i32(x) {
+ x = x | 0;
+ var ret = 0;
+ ret = HEAP8[cttz_i8 + (x & 255) >> 0] | 0;
+ if ((ret | 0) < 8) return ret | 0;
+ ret = HEAP8[cttz_i8 + (x >> 8 & 255) >> 0] | 0;
+ if ((ret | 0) < 8) return ret + 8 | 0;
+ ret = HEAP8[cttz_i8 + (x >> 16 & 255) >> 0] | 0;
+ if ((ret | 0) < 8) return ret + 16 | 0;
+ return (HEAP8[cttz_i8 + (x >>> 24) >> 0] | 0) + 24 | 0;
+}
+Module["___udivmoddi4"] = ___udivmoddi4;
+Module["___uremdi3"] = ___uremdi3;
 function _pthread_join() {}
-Module["_pthread_self"] = _pthread_self;
+Module["___muldsi3"] = ___muldsi3;
+Module["___muldi3"] = ___muldi3;
 function _emscripten_memcpy_big(dest, src, num) {
  HEAPU8.set(HEAPU8.subarray(src, src + num), dest);
  return dest;
 }
 Module["_memcpy"] = _memcpy;
+DYNAMICTOP_PTR = allocate(1, "i32", ALLOC_STATIC);
 STACK_BASE = STACKTOP = Runtime.alignMemory(STATICTOP);
-staticSealed = true;
 STACK_MAX = STACK_BASE + TOTAL_STACK;
-DYNAMIC_BASE = DYNAMICTOP = Runtime.alignMemory(STACK_MAX);
-var cttz_i8 = allocate([ 8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0 ], "i8", ALLOC_DYNAMIC);
+DYNAMIC_BASE = Runtime.alignMemory(STACK_MAX);
+HEAP32[DYNAMICTOP_PTR >> 2] = DYNAMIC_BASE;
+staticSealed = true;
 Module.asmGlobalArg = {
  "Math": Math,
  "Int8Array": Int8Array,
@@ -98882,12 +98900,17 @@ Module.asmGlobalArg = {
 Module.asmLibraryArg = {
  "abort": abort,
  "assert": assert,
- "_sbrk": _sbrk,
- "_pthread_join": _pthread_join,
+ "enlargeMemory": enlargeMemory,
+ "getTotalMemory": getTotalMemory,
+ "abortOnCannotGrowMemory": abortOnCannotGrowMemory,
+ "_llvm_cttz_i32": _llvm_cttz_i32,
  "_emscripten_memcpy_big": _emscripten_memcpy_big,
+ "_pthread_join": _pthread_join,
+ "___setErrNo": ___setErrNo,
  "_abort": _abort,
  "STACKTOP": STACKTOP,
  "STACK_MAX": STACK_MAX,
+ "DYNAMICTOP_PTR": DYNAMICTOP_PTR,
  "tempDoublePtr": tempDoublePtr,
  "ABORT": ABORT,
  "cttz_i8": cttz_i8
@@ -98896,16 +98919,21 @@ Module.asmLibraryArg = {
 
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
+var ___muldsi3 = Module["___muldsi3"] = asm["___muldsi3"];
+var _malloc = Module["_malloc"] = asm["_malloc"];
 var _i64Subtract = Module["_i64Subtract"] = asm["_i64Subtract"];
 var _free = Module["_free"] = asm["_free"];
-var runPostSets = Module["runPostSets"] = asm["runPostSets"];
+var ___udivmoddi4 = Module["___udivmoddi4"] = asm["___udivmoddi4"];
 var _i64Add = Module["_i64Add"] = asm["_i64Add"];
 var _pthread_self = Module["_pthread_self"] = asm["_pthread_self"];
 var _memset = Module["_memset"] = asm["_memset"];
-var _malloc = Module["_malloc"] = asm["_malloc"];
+var runPostSets = Module["runPostSets"] = asm["runPostSets"];
+var _sbrk = Module["_sbrk"] = asm["_sbrk"];
 var _memcpy = Module["_memcpy"] = asm["_memcpy"];
+var ___muldi3 = Module["___muldi3"] = asm["___muldi3"];
 var _argon2_hash = Module["_argon2_hash"] = asm["_argon2_hash"];
 var _bitshift64Lshr = Module["_bitshift64Lshr"] = asm["_bitshift64Lshr"];
+var ___uremdi3 = Module["___uremdi3"] = asm["___uremdi3"];
 var _argon2_error_message = Module["_argon2_error_message"] = asm["_argon2_error_message"];
 var _bitshift64Shl = Module["_bitshift64Shl"] = asm["_bitshift64Shl"];
 Runtime.stackAlloc = asm["stackAlloc"];
