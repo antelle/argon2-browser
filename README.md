@@ -162,7 +162,7 @@ You can build everything with
 
 Prerequesties:
 - emscripten / sdk-incoming-x64
-- llvm built with WebAssembly support
+- llvm built with WebAssembly support (-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly)
 - PNaCl sdk
 - CMake
 

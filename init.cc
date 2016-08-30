@@ -7,11 +7,11 @@
 #include <ppapi/cpp/var.h>
 #include <ppapi/cpp/var_dictionary.h>
 
-class HelloTutorialInstance : public pp::Instance {
+class Argon2Instance : public pp::Instance {
  public:
-  explicit HelloTutorialInstance(PP_Instance instance)
+  explicit Argon2Instance(PP_Instance instance)
       : pp::Instance(instance) {}
-  virtual ~HelloTutorialInstance() {}
+  virtual ~Argon2Instance() {}
 
   virtual void HandleMessage(const pp::Var& msg) {
     if (!msg.is_dictionary())
@@ -54,20 +54,20 @@ class HelloTutorialInstance : public pp::Instance {
   }
 };
 
-class HelloTutorialModule : public pp::Module {
+class Argon2Module : public pp::Module {
  public:
-  HelloTutorialModule() : pp::Module() {}
-  virtual ~HelloTutorialModule() {}
+  Argon2Module() : pp::Module() {}
+  virtual ~Argon2Module() {}
 
   virtual pp::Instance* CreateInstance(PP_Instance instance) {
-    return new HelloTutorialInstance(instance);
+    return new Argon2Instance(instance);
   }
 };
 
 namespace pp {
 
 Module* CreateModule() {
-  return new HelloTutorialModule();
+  return new Argon2Module();
 }
 
 }

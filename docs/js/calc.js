@@ -112,9 +112,9 @@ function calcHash() {
     var t_cost = arg && arg.time || 10;
     var m_cost = arg && arg.mem || 1024;
     var parallelism = arg && arg.parallelism || 1;
-    var pwd = Module.allocate(intArrayFromString(arg && arg.pass || 'password'), 'i8', Module.ALLOC_NORMAL);
+    var pwd = Module.allocate(Module.intArrayFromString(arg && arg.pass || 'password'), 'i8', Module.ALLOC_NORMAL);
     var pwdlen = arg && arg.pass ? arg.pass.length : 8;
-    var salt = Module.allocate(intArrayFromString(arg && arg.salt || 'somesalt'), 'i8', Module.ALLOC_NORMAL);
+    var salt = Module.allocate(Module.intArrayFromString(arg && arg.salt || 'somesalt'), 'i8', Module.ALLOC_NORMAL);
     var saltlen = arg && arg.salt ? arg.salt.length : 8;
     var hash = Module.allocate(new Array(arg && arg.hashLen || 32), 'i8', Module.ALLOC_NORMAL);
     var hashlen = arg && arg.hashLen || 32;
