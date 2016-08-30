@@ -92,7 +92,7 @@ uint64_t rotr64(const uint64_t w, const unsigned c) {
 }
 ```
 
-In C++, we can make use of SSE for 64-bit arithmetics. In browser, when no 64-bit unsigned long type is available, different engines have different time penalties of this operation.
+In C++, we can make use of SSE for 64-bit arithmetics. In JavaScript, when no 64-bit unsigned long type is available, different engines have different time penalties of this operation.
 
 ## JS Library
 
@@ -152,6 +152,19 @@ Of course, you can use generated asm.js code in node.js but it's not sensible: y
 It will be! Argon2 was compiled for [KeeWeb](https://github.com/keeweb/keeweb) project (web-based password manager) and will be used in the next version.
 
 Now it's just an experiment. Feel free to checkout and play with it.
+
+## Building
+
+You can build everything with
+```bash
+./build.sh
+```
+
+Prerequesties:
+- emscripten / sdk-incoming-x64
+- llvm built with WebAssembly support
+- PNaCl sdk
+- CMake
 
 ## License
 
