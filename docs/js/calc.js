@@ -57,7 +57,7 @@ function calcBinaryenBin() {
 function calcBinaryen(method) {
     clearLog();
 
-    if (!global.Wasm) {
+    if (!global.WebAssembly) {
         log('Your browser doesn\'t support WebAssembly, please try it in Chrome Canary or Firefox Nightly with WASM flag enabled');
         return;
     }
