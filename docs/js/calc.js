@@ -15,31 +15,31 @@ function calc(fn) {
 }
 
 function calcAsmJs() {
-    // clearLog();
-    //
-    // log('Testing Argon2 using asm.js...');
-    // if (global.Module && !global.Module.wasmJSMethod) {
-    //     log('Calculating hash....');
-    //     setTimeout(calcHash, 10);
-    //     return;
-    // }
-    //
-    // global.Module = {
-    //     print: log,
-    //     printErr: log,
-    //     setStatus: log
-    // };
-    // var ts = now();
-    // log('Loading script...');
-    // loadScript(root + 'dist/argon2-asm.min.js', function() {
-    //     log('Script loaded in ' + Math.round(now() - ts) + 'ms');
-    //     log('Calculating hash....');
-    //     setTimeout(calcHash, 10);
-    // }, function() {
-    //     log('Error loading script');
-    // });
+    clearLog();
 
-    calcBinaryen('asmjs');
+    log('Testing Argon2 using asm.js...');
+    if (global.Module && !global.Module.wasmJSMethod) {
+        log('Calculating hash....');
+        setTimeout(calcHash, 10);
+        return;
+    }
+
+    global.Module = {
+        print: log,
+        printErr: log,
+        setStatus: log
+    };
+    var ts = now();
+    log('Loading script...');
+    loadScript(root + 'dist/argon2-asm.min.js', function() {
+        log('Script loaded in ' + Math.round(now() - ts) + 'ms');
+        log('Calculating hash....');
+        setTimeout(calcHash, 10);
+    }, function() {
+        log('Error loading script');
+    });
+
+    // calcBinaryen('asmjs');
 }
 
 function calcWasm() {
