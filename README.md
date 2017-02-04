@@ -6,7 +6,7 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 [More about Argon2](https://github.com/P-H-C/phc-winner-argon2)
 
-## The numbers (:warning: the number are quite old!)
+## The numbers (:warning: the numbers are quite old!)
 
 To cut it short, here are the numbers.
 
