@@ -15,31 +15,31 @@ function calc(fn) {
 }
 
 function calcAsmJs() {
-    clearLog();
+    // clearLog();
+    //
+    // log('Testing Argon2 using asm.js...');
+    // if (global.Module && !global.Module.wasmJSMethod) {
+    //     log('Calculating hash....');
+    //     setTimeout(calcHash, 10);
+    //     return;
+    // }
+    //
+    // global.Module = {
+    //     print: log,
+    //     printErr: log,
+    //     setStatus: log
+    // };
+    // var ts = now();
+    // log('Loading script...');
+    // loadScript(root + 'dist/argon2-asm.min.js', function() {
+    //     log('Script loaded in ' + Math.round(now() - ts) + 'ms');
+    //     log('Calculating hash....');
+    //     setTimeout(calcHash, 10);
+    // }, function() {
+    //     log('Error loading script');
+    // });
 
-    log('Testing Argon2 using asm.js...');
-    if (global.Module && !global.Module.wasmJSMethod) {
-        log('Calculating hash....');
-        setTimeout(calcHash, 10);
-        return;
-    }
-
-    global.Module = {
-        print: log,
-        printErr: log,
-        setStatus: log
-    };
-    var ts = now();
-    log('Loading script...');
-    loadScript(root + 'dist/argon2-asm.min.js', function() {
-        log('Script loaded in ' + Math.round(now() - ts) + 'ms');
-        log('Calculating hash....');
-        setTimeout(calcHash, 10);
-    }, function() {
-        log('Error loading script');
-    });
-
-    // calcBinaryen('asmjs');
+    calcBinaryen('asmjs');
 }
 
 function calcWasm() {
@@ -75,7 +75,7 @@ function calcBinaryen(method) {
         setStatus: log,
         wasmBinary: null,
         wasmJSMethod: method,
-        asmjsCodeFile: root + 'dist/argon2.asm.js',
+        asmjsCodeFile: root + 'dist/argon2-asm.min.asm.js',
         wasmBinaryFile: root + 'dist/argon2.wasm',
         wasmTextFile: root + 'dist/argon2.wast'
     };
@@ -88,7 +88,7 @@ function calcBinaryen(method) {
         global.Module.wasmBinary = xhr.response;
         var ts = now();
         log('Wasm loaded, loading script...');
-        loadScript(root + 'dist/argon2.js', function() {
+        loadScript(root + 'dist/argon2.min.js', function() {
             log('Script loaded in ' + Math.round(now() - ts) + 'ms');
             log('Calculating hash....');
             setTimeout(calcHash, 10);
