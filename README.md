@@ -6,7 +6,7 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 [More about Argon2](https://github.com/P-H-C/phc-winner-argon2)
 
-## The numbers
+## The numbers (:warning: the number are quite old!)
 
 To cut it short, here are the numbers.
 
@@ -162,14 +162,10 @@ You can build everything with
 ```
 
 Prerequesties:
-- emscripten / sdk-incoming-x64
-- llvm built with WebAssembly support (-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly)
+- emscripten with WebAssembly support ([howto](http://webassembly.org/getting-started/developers-guide/))
 - PNaCl sdk
 - CMake
 
-## TODO
-
-Benefit from 64-bit arithmetic by compiling with LLVM WASM backend: `EMCC_WASM_BACKEND=1`
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
