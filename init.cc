@@ -16,7 +16,25 @@ class Argon2Instance : public pp::Instance {
   virtual void HandleMessage(const pp::Var& msg) {
     if (!msg.is_dictionary())
       return;
+    pp::VarDictionary req(msg);
+    if(req.HasKey(pp::Var("method")))
+      {
+        if(req.Get(pp::Var("method")).AsString() =="argon2_hash")
+          Handle_argon2_hash(msg);
+        if(req.Get(pp::Var("method")).AsString() =="argon2_verify")
+          Handle_argon2_verify(msg);
+      }
+    else //backward compatibility
+      {
+          Handle_argon2_hash(msg);
+      }
 
+  }
+
+  virtual void Handle_argon2_hash(const pp::Var& msg) {
+    if (!msg.is_dictionary())
+      return;
+   
     pp::VarDictionary req(msg);
 
     int t_cost = req.Get(pp::Var("time")).AsInt();
@@ -50,6 +68,28 @@ class Argon2Instance : public pp::Instance {
     } else {
         reply.Set(pp::Var("error"), argon2_error_message(res));
     }
+    PostMessage(reply);
+  }
+  virtual void Handle_argon2_verify(const pp::Var& msg) {
+    if (!msg.is_dictionary())
+      return;
+   
+    pp::VarDictionary req(msg);
+
+    auto passStr = req.Get(pp::Var("pass")).AsString();
+    int pwdlen = passStr.length();
+    const char* pwd = passStr.c_str();
+    auto encodedStr = req.Get(pp::Var("encodedString")).AsString();
+    //int encodedlen = encodedStr.length();
+    const char* encoded = encodedStr.c_str();
+    int argon2_type = req.Get(pp::Var("type")).AsInt();
+
+    int res = argon2_verify(encoded, pwd, pwdlen,
+                    argon2_type == 1 ? Argon2_i : Argon2_d);
+    pp::VarDictionary reply;
+    reply.Set(pp::Var("res"), res==0);
+    reply.Set(pp::Var("message"), argon2_error_message(res));
+ 
     PostMessage(reply);
   }
 };
