@@ -86,12 +86,12 @@ function calcBinaryen(method) {
     xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
         global.Module.wasmBinary = xhr.response;
+        global.Module.postRun = calcHash;
         var ts = now();
         log('Wasm loaded, loading script...');
         loadScript(root + 'dist/argon2.min.js', function() {
             log('Script loaded in ' + Math.round(now() - ts) + 'ms');
             log('Calculating hash....');
-            setTimeout(calcHash, 10);
         }, function() {
             log('Error loading script');
         });
