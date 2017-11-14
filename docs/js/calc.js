@@ -62,12 +62,27 @@ function calcBinaryen(method) {
         return;
     }
 
+    const mem = getArg().mem;
+
     log('Testing Argon2 using Binaryen ' + method);
     if (global.Module && global.Module.wasmJSMethod === method && global.Module._argon2_hash) {
         log('Calculating hash....');
         setTimeout(calcHash, 10);
         return;
     }
+
+    const KB = 1024 * 1024;
+    const MB = 1024 * KB;
+    const GB = 1024 * MB;
+    const WASM_PAGE_SIZE = 64 * 1024;
+
+    const totalMemory = (2*GB - 64*KB) / 1024 / WASM_PAGE_SIZE;
+    const initialMemory = Math.min(Math.max(Math.ceil(mem * 1024 / WASM_PAGE_SIZE), 256) + 256, totalMemory);
+    log('Memory: ' + initialMemory + ' pages (' + Math.round(initialMemory * 64) + ' KB)', totalMemory);
+    const wasmMemory = new WebAssembly.Memory({
+        initial: initialMemory,
+        maximum: totalMemory
+    });
 
     global.Module = {
         print: log,
@@ -77,7 +92,10 @@ function calcBinaryen(method) {
         wasmJSMethod: method,
         asmjsCodeFile: root + 'dist/argon2-asm.min.asm.js',
         wasmBinaryFile: root + 'dist/argon2.wasm',
-        wasmTextFile: root + 'dist/argon2.wast'
+        wasmTextFile: root + 'dist/argon2.wast',
+        wasmMemory: wasmMemory,
+        buffer: wasmMemory.buffer,
+        TOTAL_MEMORY: initialMemory * WASM_PAGE_SIZE
     };
 
     log('Loading wasm...');
