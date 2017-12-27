@@ -1,0 +1,58 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.3.2/libexec/bin/yarn.js add @dashlane/argon2-browser
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/usr/local/opt/fzf/bin
+
+Yarn version: 
+  1.3.2
+
+Node version: 
+  8.0.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "@dashlane/argon2-browser",
+    "version": "1.2.0-fork",
+    "description": "Argon2 library compiled for browser runtime",
+    "main": "lib/argon2.js",
+    "directories": {
+      "doc": "docs",
+      "lib": "lib"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/antelle/argon2-browser.git"
+    },
+    "author": "Antelle",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/antelle/argon2-browser/issues"
+    },
+    "homepage": "https://github.com/antelle/argon2-browser#readme"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@dashlane%2fargon2-browser: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.3.2/libexec/lib/cli.js:62098:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.3.2/libexec/lib/cli.js:123085:22)
+      at emitTwo (events.js:125:13)
+      at Request.emit (events.js:213:7)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.3.2/libexec/lib/cli.js:124068:10)
+      at emitOne (events.js:115:13)
+      at Request.emit (events.js:210:7)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.3.2/libexec/lib/cli.js:123988:12)
+      at Object.onceWrapper (events.js:312:19)
+      at emitNone (events.js:110:20)

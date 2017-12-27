@@ -1,11 +1,10 @@
 {
-  "name": "argon2-browser",
-  "version": "1.2.0",
+  "name": "@dashlane/argon2-browser",
+  "version": "1.3.2",
   "description": "Argon2 library compiled for browser runtime",
-  "main": "lib/argon2.js",
+  "main": "./lib/argon2.js",
   "directories": {
-    "doc": "docs",
-    "lib": "lib"
+    "lib": "./lib"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

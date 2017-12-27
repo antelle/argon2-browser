@@ -119,7 +119,7 @@ argon2.hash({ pass: 'password', salt: 'somesalt' })
     .catch(e => console.error(e.message, e.code))
 ```
 
-Bring your own bundler and promise polyfill.  
+Bring your own bundler and promise polyfill.
 Other parameters:
 ```javascript
 argon2.hash({
