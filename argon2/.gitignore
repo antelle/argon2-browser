@@ -1,6 +1,6 @@
 argon2
 libargon2.a
-libargon2.so
+libargon2.so*
 libargon2.dylib
 .DS_Store
 src/*.o
@@ -18,3 +18,4 @@ Argon2.sdf
 Argon2.VC.opendb
 *.zip
 *.tar.gz
+tags

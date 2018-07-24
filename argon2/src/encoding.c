@@ -1,3 +1,20 @@
+/*
+ * Argon2 reference source code package - reference C implementations
+ *
+ * Copyright 2015
+ * Daniel Dinu, Dmitry Khovratovich, Jean-Philippe Aumasson, and Samuel Neves
+ *
+ * You may use this work under the terms of a Creative Commons CC0 1.0
+ * License/Waiver or the Apache Public License 2.0, at your option. The terms of
+ * these licenses can be found at:
+ *
+ * - CC0 1.0 Universal : http://creativecommons.org/publicdomain/zero/1.0
+ * - Apache 2.0        : http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * You should have received a copy of both of these licenses along with this
+ * software. If not, they may be obtained at the above URLs.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,11 +38,6 @@
  *   -- The second section is specific to Argon2. It encodes and decodes
  *   the parameters, salts and outputs. It does not compute the hash
  *   itself.
- *
- *   -- The third section is test code, with a main() function. With
- *   this section, the whole file compiles as a stand-alone program
- *   that exercises the encoding and decoding functions with some
- *   test vectors.
  *
  * The code was originally written by Thomas Pornin <pornin@bolet.org>,
  * to whom comments and remarks may be sent. It is released under what
@@ -229,19 +241,18 @@ static const char *decode_decimal(const char *str, unsigned long *v) {
  *
  * The code below applies the following format:
  *
- *  $argon2<T>[$v=<num>]$m=<num>,t=<num>,p=<num>[,keyid=<bin>][,data=<bin>][$<bin>[$<bin>]]
+ *  $argon2<T>[$v=<num>]$m=<num>,t=<num>,p=<num>$<bin>$<bin>
  *
- * where <T> is either 'd' or 'i', <num> is a decimal integer (positive, fits in
- * an 'unsigned long'), and <bin> is Base64-encoded data (no '=' padding
+ * where <T> is either 'd', 'id', or 'i', <num> is a decimal integer (positive,
+ * fits in an 'unsigned long'), and <bin> is Base64-encoded data (no '=' padding
  * characters, no newline or whitespace).
- * The "keyid" is a binary identifier for a key (up to 8 bytes);
- * "data" is associated data (up to 32 bytes). When the 'keyid'
- * (resp. the 'data') is empty, then it is ommitted from the output.
  *
  * The last two binary chunks (encoded in Base64) are, in that order,
- * the salt and the output. Both are optional, but you cannot have an
- * output without a salt. The binary salt length is between 8 and 48 bytes.
- * The output length is always exactly 32 bytes.
+ * the salt and the output. Both are required. The binary salt length and the
+ * output length must be in the allowed ranges defined in argon2.h.
+ *
+ * The ctx struct must contain buffers large enough to hold the salt and pwd
+ * when it is fed into decode_string.
  */
 
 int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
@@ -256,7 +267,7 @@ int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
         str += cc_len;                                                         \
     } while ((void)0, 0)
 
-/* prefix checking with supplied code */
+/* optional prefix checking with supplied code */
 #define CC_opt(prefix, code)                                                   \
     do {                                                                       \
         size_t cc_len = strlen(prefix);                                        \
@@ -266,7 +277,7 @@ int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
         }                                                                      \
     } while ((void)0, 0)
 
-/* Decoding  prefix into decimal */
+/* Decoding prefix into decimal */
 #define DECIMAL(x)                                                             \
     do {                                                                       \
         unsigned long dec_x;                                                   \
@@ -277,6 +288,20 @@ int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
         (x) = dec_x;                                                           \
     } while ((void)0, 0)
 
+
+/* Decoding prefix into uint32_t decimal */
+#define DECIMAL_U32(x)                                                         \
+    do {                                                                       \
+        unsigned long dec_x;                                                   \
+        str = decode_decimal(str, &dec_x);                                     \
+        if (str == NULL || dec_x > UINT32_MAX) {                               \
+            return ARGON2_DECODING_FAIL;                                       \
+        }                                                                      \
+        (x) = (uint32_t)dec_x;                                                 \
+    } while ((void)0, 0)
+
+
+/* Decoding base64 into a binary buffer */
 #define BIN(buf, max_len, len)                                                 \
     do {                                                                       \
         size_t bin_len = (max_len);                                            \
@@ -287,48 +312,53 @@ int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
         (len) = (uint32_t)bin_len;                                             \
     } while ((void)0, 0)
 
-    size_t maxadlen = ctx->adlen;
     size_t maxsaltlen = ctx->saltlen;
     size_t maxoutlen = ctx->outlen;
     int validation_result;
+    const char* type_string;
 
-    ctx->adlen = 0;
-    ctx->saltlen = 0;
-    ctx->outlen = 0;
-    ctx->pwdlen = 0;
-
-    if (type == Argon2_i)
-        CC("$argon2i");
-    else if (type == Argon2_d)
-        CC("$argon2d");
-    else
+    /* We should start with the argon2_type we are using */
+    type_string = argon2_type2string(type, 0);
+    if (!type_string) {
         return ARGON2_INCORRECT_TYPE;
-    ctx->version = ARGON2_VERSION_10;
+    }
+
+    CC("$");
+    CC(type_string);
+
     /* Reading the version number if the default is suppressed */
-    CC_opt("$v=", DECIMAL(ctx->version));
+    ctx->version = ARGON2_VERSION_10;
+    CC_opt("$v=", DECIMAL_U32(ctx->version));
+
     CC("$m=");
-    DECIMAL(ctx->m_cost);
+    DECIMAL_U32(ctx->m_cost);
     CC(",t=");
-    DECIMAL(ctx->t_cost);
+    DECIMAL_U32(ctx->t_cost);
     CC(",p=");
-    DECIMAL(ctx->lanes);
+    DECIMAL_U32(ctx->lanes);
     ctx->threads = ctx->lanes;
 
-    CC_opt(",data=", BIN(ctx->ad, maxadlen, ctx->adlen));
-    if (*str == 0) {
-        return ARGON2_OK;
-    }
     CC("$");
     BIN(ctx->salt, maxsaltlen, ctx->saltlen);
-    if (*str == 0) {
-        return ARGON2_OK;
-    }
     CC("$");
     BIN(ctx->out, maxoutlen, ctx->outlen);
+
+    /* The rest of the fields get the default values */
+    ctx->secret = NULL;
+    ctx->secretlen = 0;
+    ctx->ad = NULL;
+    ctx->adlen = 0;
+    ctx->allocate_cbk = NULL;
+    ctx->free_cbk = NULL;
+    ctx->flags = ARGON2_DEFAULT_FLAGS;
+
+    /* On return, must have valid context */
     validation_result = validate_inputs(ctx);
     if (validation_result != ARGON2_OK) {
         return validation_result;
     }
+
+    /* Can't have any additional characters */
     if (*str == 0) {
         return ARGON2_OK;
     } else {
@@ -340,12 +370,12 @@ int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
 #undef BIN
 }
 
-#ifdef ARGON2_JS
-
-// because this generates WASM error:
-// sprintf(tmp, "%lu", (unsigned long)(x));
-
 char* itoa(int i, char b[]){
+    #ifdef ARGON2_JS
+
+    // because this generates WASM error:
+    // sprintf(tmp, "%lu", (unsigned long)(x));
+
     char const digit[] = "0123456789";
     char* p = b;
     if(i<0){
@@ -363,9 +393,13 @@ char* itoa(int i, char b[]){
         i = i/10;
     }while(i);
     return b;
-}
 
-#endif
+    #else
+
+    sprintf(b, "%lu", (unsigned long)(i));
+
+    #endif
+}
 
 int encode_string(char *dst, size_t dst_len, argon2_context *ctx,
                   argon2_type type) {
@@ -397,17 +431,24 @@ int encode_string(char *dst, size_t dst_len, argon2_context *ctx,
         dst_len -= sb_len;                                                     \
     } while ((void)0, 0)
 
-    if (type == Argon2_i)
-        SS("$argon2i$v=");
-    else if (type == Argon2_d)
-        SS("$argon2d$v=");
-    else
-        return ARGON2_ENCODING_FAIL;
+    const char* type_string = argon2_type2string(type, 0);
+    int validation_result = validate_inputs(ctx);
 
-    if (validate_inputs(ctx) != ARGON2_OK) {
-        return validate_inputs(ctx);
+    if (!type_string) {
+      return ARGON2_ENCODING_FAIL;
     }
+
+    if (validation_result != ARGON2_OK) {
+      return validation_result;
+    }
+
+
+    SS("$");
+    SS(type_string);
+
+    SS("$v=");
     SX(ctx->version);
+
     SS("$m=");
     SX(ctx->m_cost);
     SS(",t=");
@@ -415,19 +456,8 @@ int encode_string(char *dst, size_t dst_len, argon2_context *ctx,
     SS(",p=");
     SX(ctx->lanes);
 
-    if (ctx->adlen > 0) {
-        SS(",data=");
-        SB(ctx->ad, ctx->adlen);
-    }
-
-    if (ctx->saltlen == 0)
-        return ARGON2_OK;
-
     SS("$");
     SB(ctx->salt, ctx->saltlen);
-
-    if (ctx->outlen == 0)
-        return ARGON2_OK;
 
     SS("$");
     SB(ctx->out, ctx->outlen);
@@ -461,4 +491,3 @@ size_t numlen(uint32_t num) {
     }
     return len;
 }
-
