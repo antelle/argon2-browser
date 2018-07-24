@@ -102,7 +102,7 @@ function getArg() {
         mem: +(document.getElementById('txtMem').value || 1024),
         hashLen: +(document.getElementById('txtLen').value || 32),
         parallelism: +(document.getElementById('txtPar').value || 1),
-        type: document.getElementById('inlineRadio1').checked ? 1 : 0,
+        type: document.querySelector('input[name="radioType"]:checked').value || 0,
     };
 }
 
