@@ -370,7 +370,7 @@ int decode_string(argon2_context *ctx, const char *str, argon2_type type) {
 #undef BIN
 }
 
-char* itoa(int i, char b[]){
+void itoa(int i, char b[]){
     #ifdef ARGON2_JS
 
     // because this generates WASM error:
@@ -392,7 +392,6 @@ char* itoa(int i, char b[]){
         *--p = digit[i%10];
         i = i/10;
     }while(i);
-    return b;
 
     #else
 
