@@ -73,7 +73,7 @@ It's hard to measure WebAssembly code size because the project is not finished y
 
 ## Is Argon2 modified?
 
-Put it simply, it's the same. Some changes were added, though, required to cope with WASM issues. You can always compare it with the original argon2 to check.
+No, now it's fully compatible with WASM.
 
 ## Difficulties
 
