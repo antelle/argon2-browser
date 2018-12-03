@@ -19,8 +19,6 @@ set(sources
     argon2/src/encoding.c
     argon2/src/ref.c
     argon2/src/thread.c
-
-    init.cc
 )
 
 add_executable(argon2 ${sources})
