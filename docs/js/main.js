@@ -5,7 +5,6 @@ document.getElementById('btnCalcAsm').addEventListener('click', calc(calcAsmJs))
 document.getElementById('btnCalcWasm').addEventListener('click', calc(calcWasm));
 document.getElementById('btnCalcBinaryenSexpr').addEventListener('click', calc(calcBinaryenSexpr));
 document.getElementById('btnCalcBinaryenBin').addEventListener('click', calc(calcBinaryenBin));
-document.getElementById('btnCalcPNaCl').addEventListener('click', calc(calcPNaCl));
 document.getElementById('btnCalcAsmWorker').addEventListener('click', function() { calcWorker('asm'); });
 document.getElementById('btnCalcWasmWorker').addEventListener('click', function() { calcWorker('wasm'); });
 
@@ -40,58 +39,6 @@ function calcWorker(method) {
             worker.postMessage({ calc: method, arg: getArg() });
         }
     };
-}
-
-var pnaclTs;
-function calcPNaCl() {
-    window.Module = null;
-    clearLog();
-
-    if (!navigator.mimeTypes['application/x-pnacl']) {
-        return log('PNaCl is not supported by your browser');
-    }
-    log('Testing Argon2 using PNaCl');
-
-    var listener = document.getElementById('pnaclListener');
-    var moduleEl = document.getElementById('pnacl-argon2');
-
-    pnaclTs = performance.now();
-    if (moduleEl) {
-        moduleEl.postMessage(getArg());
-        return;
-    }
-
-    log('Loading PNaCl module...');
-    moduleEl = document.createElement('embed');
-    moduleEl.setAttribute('name', 'argon2');
-    moduleEl.setAttribute('id', 'pnacl-argon2');
-    moduleEl.setAttribute('width', '0');
-    moduleEl.setAttribute('height', '0');
-    moduleEl.setAttribute('src', 'argon2.nmf');
-    moduleEl.setAttribute('type', 'application/x-pnacl');
-
-    listener.addEventListener('load', function() {
-        log('PNaCl module loaded in ' + Math.round(performance.now() - pnaclTs) + 'ms');
-        log('Calculating hash....');
-        pnaclTs = performance.now();
-        moduleEl.postMessage(getArg());
-    }, true);
-    listener.addEventListener('message', function(e) {
-        var encoded = e.data.encoded;
-        var hash = e.data.hash;
-        if (e.data.res) {
-            log('Error: ' + e.data.res + ': ' + e.data.error);
-        } else {
-            log('Encoded: ' + encoded);
-            log('Hash: ' + hash);
-            log('Elapsed: ' + Math.round(performance.now() - pnaclTs) + 'ms');
-        }
-    }, true);
-    listener.addEventListener('error', function() { log('Error'); }, true);
-    listener.addEventListener('crash', function() { log('Crash'); }, true);
-
-    listener.appendChild(moduleEl);
-    moduleEl.offsetTop; // required by PNaCl
 }
 
 function getArg() {
