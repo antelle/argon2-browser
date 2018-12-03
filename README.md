@@ -73,7 +73,7 @@ It's hard to measure WebAssembly code size because the project is not finished y
 
 ## Is Argon2 modified?
 
-The only change is disabling threading support.
+Nope, it's just as the creators intended.
 
 ## Difficulties
 
@@ -130,7 +130,7 @@ argon2.hash({
     time: 1, // the number of iterations
     mem: 1024, // used memory, in KiB
     hashLen: 24, // desired hash length
-    parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
+    parallelism: 1, // desired parallelism
     type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i
     distPath: '' // asm.js script location, without trailing slash
 })
