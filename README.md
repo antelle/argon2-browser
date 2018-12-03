@@ -73,7 +73,7 @@ It's hard to measure WebAssembly code size because the project is not finished y
 
 ## Is Argon2 modified?
 
-The only change is disabling threading support.
+The only change is [disabling threading support](https://github.com/antelle/argon2-browser/commit/4b8950395c8c03a888ba6f417a4001458cdd3231).
 
 ## Difficulties
 
