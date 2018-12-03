@@ -119,6 +119,13 @@ argon2.hash({ pass: 'password', salt: 'somesalt' })
     .catch(e => console.error(e.message, e.code))
 ```
 
+Verify the encoded hash (if you need it):
+```javascript
+argon2.hash({ pass: 'password', encoded: 'enc-hash' })
+    .then(() => console.log('OK'))
+    .catch(e => console.error(e.message, e.code))
+```
+
 Bring your own bundler and promise polyfill.  
 Other parameters:
 ```javascript
