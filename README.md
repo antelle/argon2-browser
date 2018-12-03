@@ -73,7 +73,7 @@ It's hard to measure WebAssembly code size because the project is not finished y
 
 ## Is Argon2 modified?
 
-No, now it's fully compatible with WASM.
+The only change is disabling threading support.
 
 ## Difficulties
 
