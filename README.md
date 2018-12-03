@@ -102,14 +102,14 @@ WASM can support 64-bit integers but it requires compilation with LLVM, and not 
 
 Until WASM is mature, js library is using only asm.js. Here's how to try it.
 
-Install with bower:
+Install with npm:
 ```bash
-bower install argon2-browser
+npm install argon2-browser
 ```
 
 Add script to your HTML:
 ```html
-<script src="bower_components/argon2-browser/lib/argon2.js"></script>
+<script src="node_modules/argon2-browser/lib/argon2.js"></script>
 ```
 
 Calculate the hash:
