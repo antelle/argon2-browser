@@ -121,7 +121,7 @@ argon2.hash({ pass: 'password', salt: 'somesalt' })
 
 Verify the encoded hash (if you need it):
 ```javascript
-argon2.hash({ pass: 'password', encoded: 'enc-hash' })
+argon2.verify({ pass: 'password', encoded: 'enc-hash' })
     .then(() => console.log('OK'))
     .catch(e => console.error(e.message, e.code))
 ```
