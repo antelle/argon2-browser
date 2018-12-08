@@ -1,6 +1,6 @@
 # Argon2 in browser
 
-Argon2 is a password-hashing function, the winner of Password Hashing Competition. Here, Argon2 library is compiled for browser runtime.
+Argon2 is a password-hashing function, the winner of Password Hashing Competition. Here Argon2 library is compiled for browser runtime.
 
 [Live demo](https://antelle.github.io/argon2-browser)
 
