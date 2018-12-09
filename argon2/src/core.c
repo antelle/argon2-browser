@@ -322,17 +322,16 @@ static int fill_memory_blocks_mt(argon2_instance_t *instance) {
                     instance; /* preparing the thread input */
                 memcpy(&(thr_data[l].pos), &position,
                        sizeof(argon2_position_t));
-#ifdef EMSCRIPTEN
-                fill_segment(instance, position);
-#else
+#ifdef __EMSCRIPTEN_PTHREADS__
                 if (argon2_thread_create(&thread[l], &fill_segment_thr,
                                          (void *)&thr_data[l])) {
                     rc = ARGON2_THREAD_FAIL;
                     goto fail;
                 }
-#endif
-                /* fill_segment(instance, position); */
+#else
+                fill_segment(instance, position);
                 /*Non-thread equivalent of the lines above */
+#endif
             }
 
             /* 3. Joining remaining threads */
