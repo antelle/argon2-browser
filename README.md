@@ -160,8 +160,8 @@ argon2.hash({
 
 You can use this module in two ways: 
 
-1. write the wasm loader manually, for example, if you need more control over memory ([example](blob/master/docs/js/calc.js))
-2. bundle it with WebPack or another bundler ([example](tree/master/examples/webpack)).
+1. write the wasm loader manually, for example, if you need more control over memory ([example](docs/js/calc.js))
+2. bundle it with WebPack or another bundler ([example](examples/webpack)).
 
 ## Node.js support
 
