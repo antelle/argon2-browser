@@ -160,12 +160,13 @@ argon2.hash({
 
 You can use this module in two ways: 
 
-1. write the wasm loader manually, for example, if you need more control over memory ([example](docs/js/calc.js))
-2. bundle it with WebPack or another bundler ([example](examples/webpack)).
+1. write the wasm loader manually, for example, if you need more control over memory ([example](docs/js/calc.js));
+2. bundle it with WebPack or another bundler ([example](examples/webpack));
+3. in node.js: [example](examples/node) (see a note below)
 
 ## Node.js support
 
-Of course, you can use generated asm.js code in node.js but it's not sensible: you will get much better speed by compiling native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
+Of course, you [can use](examples/node) generated asm.js code in node.js but it's not sensible: you will get much better speed by compiling native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
 
 ## Is it used anywhere?
 
