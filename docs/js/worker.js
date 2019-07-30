@@ -6,17 +6,13 @@ self.onmessage = function(e) {
     self.postMessage('calc:' + e.data.calc);
     calcHashArg = e.data.arg;
     switch (e.data.calc) {
-        case 'asm':
-            calcAsmJs();
-            break;
         case 'wasm':
             calcWasm();
             break;
     }
 };
 
-function clearLog() {
-}
+function clearLog() {}
 
 function log(msg) {
     self.postMessage({ msg: msg });

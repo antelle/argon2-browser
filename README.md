@@ -6,6 +6,8 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 [More about Argon2](https://github.com/P-H-C/phc-winner-argon2)
 
+[Usage](#usage)
+
 ## The numbers
 
 ### :warning: they are quite old, WebAssembly is better now
@@ -154,6 +156,13 @@ argon2.hash({
 })
 ```
 
+## Usage
+
+You can use this module in two ways: 
+
+1. write the wasm loader manually, for example, if you need more control over memory ([example](blob/master/docs/js/calc.js))
+2. bundle it with WebPack or another bundler ([example](tree/master/examples/webpack)).
+
 ## Node.js support
 
 Of course, you can use generated asm.js code in node.js but it's not sensible: you will get much better speed by compiling native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
@@ -172,7 +181,6 @@ You can build everything with
 
 Prerequesties:
 - emscripten with WebAssembly support ([howto](http://webassembly.org/getting-started/developers-guide/))
-- PNaCl sdk
 - CMake
 
 ## License

@@ -1,0 +1,14 @@
+{
+  "name": "argon2-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "argon2-demo-node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "argon2-browser": "^1.6.0"
+  }
+}

@@ -1,15 +1,19 @@
 'use strict';
 
-document.getElementById('frm').addEventListener('submit', function(e) { e.preventDefault(); });
-document.getElementById('btnCalcAsm').addEventListener('click', calc(calcAsmJs));
-document.getElementById('btnCalcWasm').addEventListener('click', calc(calcWasm));
-document.getElementById('btnCalcBinaryenSexpr').addEventListener('click', calc(calcBinaryenSexpr));
-document.getElementById('btnCalcBinaryenBin').addEventListener('click', calc(calcBinaryenBin));
-document.getElementById('btnCalcAsmWorker').addEventListener('click', function() { calcWorker('asm'); });
-document.getElementById('btnCalcWasmWorker').addEventListener('click', function() { calcWorker('wasm'); });
+document.getElementById('frm').addEventListener('submit', function(e) {
+    e.preventDefault();
+});
+document
+    .getElementById('btnCalcWasm')
+    .addEventListener('click', calc(calcWasm));
+document
+    .getElementById('btnCalcWasmWorker')
+    .addEventListener('click', function() {
+        calcWorker('wasm');
+    });
 
 function loadScript(src, onload, onerror) {
-    var el = document.createElement("script");
+    var el = document.createElement('script');
     el.src = src;
     el.onload = onload;
     el.onerror = onerror;
@@ -49,7 +53,7 @@ function getArg() {
         mem: +(document.getElementById('txtMem').value || 1024),
         hashLen: +(document.getElementById('txtLen').value || 32),
         parallelism: +(document.getElementById('txtPar').value || 1),
-        type: +document.querySelector('[name=radioType]:checked').value,
+        type: +document.querySelector('[name=radioType]:checked').value
     };
 }
 
