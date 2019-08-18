@@ -6,7 +6,16 @@ argon2
         salt: 'somesalt'
     })
     .then(hash => {
-        document.querySelector('pre').innerText = `It works!
-Encoded: ${hash.encoded}
-Hex: ${hash.hashHex}`;
-    });
+        document.querySelector('pre').innerText =
+            `Encoded: ${hash.encoded}\n` +
+            `Hex: ${hash.hashHex}\n`;
+
+        argon2
+            .verify({
+                pass: 'p@ssw0rd',
+                encoded: hash.encoded
+            })
+            .then(() => document.querySelector('pre').innerText += 'Verified OK')
+            .catch(e => console.error('Error: ', e));
+    })
+    .catch(e => console.error('Error: ', e));
