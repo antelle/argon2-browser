@@ -88,7 +88,7 @@ function calcBinaryen(method) {
         var ts = now();
         log('Wasm loaded, loading script...');
         loadScript(
-            root + 'dist/argon2.min.js',
+            root + 'dist/argon2.js',
             function() {
                 log('Script loaded in ' + Math.round(now() - ts) + 'ms');
                 log('Calculating hash....');
