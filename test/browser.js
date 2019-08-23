@@ -31,13 +31,16 @@ describe('Browser', function() {
 
     it('should run tests in browser using vanilla javascript', async function() {
         this.timeout(60000);
-        return await runInBrowser(this, 'vanilla');
+        return await runInBrowser('vanilla');
     });
 
     it('should run tests in browser using webpack', async function() {
         this.timeout(120000);
 
-        const options = { cwd: path.resolve(__dirname, 'webpack') };
+        const options = {
+            cwd: path.resolve(__dirname, 'webpack'),
+            stdio: 'inherit'
+        };
 
         let result = child_process.spawnSync('npm', ['i'], options);
         assert.strictEqual(result.status, 0, 'Installing npm modules');
