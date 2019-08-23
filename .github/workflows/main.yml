@@ -1,4 +1,4 @@
-name: Compile and run tests
+name: Compile
 
 on: [push]
 
@@ -14,10 +14,6 @@ jobs:
                   ./build.sh
                   sha256sum ./dist/argon2.js >> ./dist/CHECKSUM
                   sha256sum ./dist/argon2.wasm >> ./dist/CHECKSUM
-            - name: Test
-              run: |
-                  npm i
-                  npm test
             - name: Upload artifacts
               uses: actions/upload-artifact@v1.0.0
               with:
