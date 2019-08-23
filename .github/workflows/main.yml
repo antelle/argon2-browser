@@ -1,0 +1,21 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: mymindstorm/setup-emsdk@v1
+    - uses: actions/checkout@v1
+    - name: Build
+      run: ./build.sh
+    - name: Compress artifacts
+      run: tar cvzf dist.tar.gz ./dist
+    - uses: actions/upload-artifact@v1.0.0
+      with:
+        name: dist.tar.gz
+        path: ./dist.tar.gz
+        

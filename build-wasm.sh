@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cmake \
     -DOUTPUT_NAME="argon2" \
-    -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake \
+    -DCMAKE_TOOLCHAIN_FILE=$EMSDK/fastcomp/emscripten/cmake/Modules/Platform/Emscripten.cmake \
     -DCMAKE_VERBOSE_MAKEFILE=OFF \
     -DCMAKE_BUILD_TYPE=MinSizeRel \
     -DCMAKE_C_FLAGS="-O3" \
