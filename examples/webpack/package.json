@@ -1,5 +1,6 @@
 {
   "name": "argon2-webpack",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "argon2-demo-webpack.js",
