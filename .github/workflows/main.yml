@@ -7,7 +7,8 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: mymindstorm/setup-emsdk@476bc50c4df2db1a3e9d72df0885c43ae0e5a3d4
+            - name: Setup emsdk
+              uses: mymindstorm/setup-emsdk@476bc50c4df2db1a3e9d72df0885c43ae0e5a3d4
             - uses: actions/checkout@v1
             - name: Build
               run: |
