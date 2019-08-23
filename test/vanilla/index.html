@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Argon2 Browser Tests</title>
+    <link rel="shortcut icon"type="image/x-icon" href="data:image/x-icon;,">
+    <link rel="stylesheet" href="../../node_modules/mocha/mocha.css">
+</head>
+<body>
+    <div id="mocha"></div>
+    <script src="../../node_modules/chai/chai.js"></script>
+    <script src="../../node_modules/mocha/mocha.js"></script>
+    <script src="setup.js"></script>
+    <script src="../../lib/argon2.js"></script>
+    <script class="mocha-init">
+        mocha.setup('bdd');
+    </script>
+    <script src="../suite/hash.js"></script>
+    <script src="../suite/verify.js"></script>
+    <script class="mocha-exec">
+        const stdout = [];
+        const stderr = [];
+
+        console.log = (...args) => stdout.push(args);
+        console.info = (...args) => stdout.push(args);
+        console.error = (...args) => stderr.push(args);
+        console.warn = (...args) => stderr.push(args);
+
+        mocha.reporter('json');
+        mocha.run(() => window.argon2testResults = { stdout, stderr });
+    </script>
+</body>
+</html>

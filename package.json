@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/antelle/argon2-browser/issues"
   },
-  "homepage": "https://github.com/antelle/argon2-browser#readme"
+  "homepage": "https://github.com/antelle/argon2-browser#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chromedriver": "^76.0.0",
+    "http-server": "^0.11.1",
+    "mocha": "^6.2.0",
+    "selenium-webdriver": "^4.0.0-alpha.4"
+  }
 }
