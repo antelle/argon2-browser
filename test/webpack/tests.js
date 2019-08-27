@@ -1,5 +1,8 @@
 mocha.setup('bdd');
 
+global.chat = require('chai');
+global.argon2 = require('argon2-browser');
+
 require('../suite/hash');
 require('../suite/verify');
 

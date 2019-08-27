@@ -1,6 +1,5 @@
 describe('argon2.verify', function() {
-    const assert = require('chai').assert;
-    const argon2 = require('argon2-browser');
+    const { assert } = chai;
 
     it('should verify a hash', async function() {
         await argon2.verify({

@@ -1,6 +1,5 @@
 describe('argon2.hash', function() {
-    const assert = require('chai').assert;
-    const argon2 = require('argon2-browser');
+    const { assert } = chai;
 
     it('should compute hash', async function() {
         const hash = await argon2.hash({

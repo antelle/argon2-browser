@@ -10,7 +10,9 @@
     <div id="mocha"></div>
     <script src="../../node_modules/chai/chai.js"></script>
     <script src="../../node_modules/mocha/mocha.js"></script>
-    <script src="setup.js"></script>
+    <script>
+        window.argon2WasmPath = '../../dist/argon2.wasm';
+    </script>
     <script src="../../lib/argon2.js"></script>
     <script class="mocha-init">
         mocha.setup('bdd');

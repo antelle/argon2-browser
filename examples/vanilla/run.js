@@ -1,23 +1,19 @@
-delete global.TextEncoder;
-delete global.TextDecoder;
-
-const argon2 = require('argon2-browser');
-
 argon2
     .hash({
         pass: 'p@ssw0rd',
         salt: 'somesalt'
     })
     .then(hash => {
-        console.log(`Encoded: ${hash.encoded}`);
-        console.log(`Hex: ${hash.hashHex}`);
+        document.querySelector('pre').innerText =
+            `Encoded: ${hash.encoded}\n` +
+            `Hex: ${hash.hashHex}\n`;
 
         argon2
             .verify({
                 pass: 'p@ssw0rd',
                 encoded: hash.encoded
             })
-            .then(() => console.log('Verified OK'))
+            .then(() => document.querySelector('pre').innerText += 'Verified OK')
             .catch(e => console.error('Error: ', e));
     })
     .catch(e => console.error('Error: ', e));
