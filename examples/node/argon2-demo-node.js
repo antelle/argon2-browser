@@ -1,6 +1,3 @@
-delete global.TextEncoder;
-delete global.TextDecoder;
-
 const argon2 = require('argon2-browser');
 
 argon2
