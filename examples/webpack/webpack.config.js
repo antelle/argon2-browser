@@ -7,7 +7,7 @@ const path = require('path');
 // of this configuration are included there, otherwise you're likely to
 // see the same errors.
 //
-// If don't include these hacks and it still compile successfully,
+// If don't include these hacks and it still compiles successfully,
 // it means that you're using a more modern version of WebPack.
 // I'd be happy if you let me know that it's no longer needed!
 module.exports = {
