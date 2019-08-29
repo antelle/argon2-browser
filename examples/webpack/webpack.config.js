@@ -1,7 +1,5 @@
 const path = require('path');
 
-// This config is solving several issues
-//
 // WebPack has native support for WebAssembly modules, however it's not ideal
 // and in our case it's introducing more issues than it solves.
 //
