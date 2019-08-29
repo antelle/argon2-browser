@@ -39,9 +39,9 @@ module.exports = {
             {
                 test: /\.wasm$/,
                 // Tells WebPack that this module should be included as
-                // base64-encoded plaintext and not as code
+                // base64-encoded binary file and not as code
                 loaders: ['base64-loader'],
-                // Disables very WebPack opinion where WebAssembly should be,
+                // Disables WebPack's opinion where WebAssembly should be,
                 // makes it think that it's not WebAssembly
                 //
                 // Error: WebAssembly module is included in initial chunk.
