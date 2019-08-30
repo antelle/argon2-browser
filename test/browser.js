@@ -1,32 +1,34 @@
 describe('Browser', function() {
-    require('chromedriver');
     const path = require('path');
     const child_process = require('child_process');
-
     const assert = require('chai').assert;
-
-    const webdriver = require('selenium-webdriver');
-    const chrome = require('selenium-webdriver/chrome');
-
+    const puppeteer = require('puppeteer');
     const httpServer = require('http-server');
 
     const port = 19273;
-    const server = httpServer.createServer({ root: path.resolve(__dirname, '..') });
-
-    const driver = new webdriver.Builder()
-        .forBrowser('chrome')
-        .setChromeOptions(new chrome.Options().headless())
-        .build();
-
-    before(function() {
-        server.listen(port);
-        rmDist();
+    const server = httpServer.createServer({
+        root: path.resolve(__dirname, '..')
     });
 
-    after(function() {
-        server.close();
-        driver.quit();
-        rmDist();
+    let browser;
+
+    before(function(done) {
+        this.timeout(60000);
+        (async function() {
+            browser = await puppeteer.launch();
+            server.listen(port);
+            rmDist();
+            done();
+        })();
+    });
+
+    after(function(done) {
+        (async function() {
+            await browser.close();
+            server.close();
+            rmDist();
+            done();
+        })();
     });
 
     it('should run tests in browser using vanilla javascript', async function() {
@@ -52,10 +54,12 @@ describe('Browser', function() {
     });
 
     async function runInBrowser(htmlFolder) {
-        driver.get(`http://localhost:${port}/test/${htmlFolder}/index.html`);
-        const result = await driver.wait(async function() {
-            return await driver.executeScript('return window.argon2testResults;');
-        });
+        const page = await browser.newPage();
+        await page.goto(
+            `http://localhost:${port}/test/${htmlFolder}/index.html`
+        );
+        await page.waitFor(() => window.argon2testResults);
+        const result = await page.evaluate(() => window.argon2testResults);
 
         assert.ok(result);
         assert.ok(result.stdout);
@@ -76,6 +80,9 @@ describe('Browser', function() {
     }
 
     function rmDist() {
-        child_process.spawnSync('rm', ['-rf', path.resolve(__dirname, 'webpack', 'dist')]);
+        child_process.spawnSync('rm', [
+            '-rf',
+            path.resolve(__dirname, 'webpack', 'dist')
+        ]);
     }
 });

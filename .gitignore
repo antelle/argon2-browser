@@ -27,3 +27,6 @@ examples/**/dist/
 test/**/package-lock.json
 test/webpack/node_modules/
 test/webpack/dist/
+bintray.json
+*.tgz
+package/
