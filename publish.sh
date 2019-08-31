@@ -55,7 +55,6 @@ cp package/README.md README.md
 
 echo "Cleaning up..."
 
-rm "argon2-browser-$VERSION.tgz"
 rm -rf package/
 
 if git diff-index --quiet HEAD --; then
@@ -67,5 +66,15 @@ else
 fi
 
 git tag -s "$VERSION" -m "$VERSION"
+echo "Added tag $VERSION"
 
-echo "Done! Please verify if everything is OK and push."
+echo "Pushing to GihHub..."
+git push --follow-tags
+
+echo "Publishing to npm..."
+npm publish
+
+echo "Cleaning up..."
+rm "argon2-browser-$VERSION.tgz"
+
+echo "Done! Published $VERSION: https://www.npmjs.com/package/argon2-browser/v/$VERSION"
