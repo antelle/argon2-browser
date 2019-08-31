@@ -35,7 +35,7 @@ rm -rf package/
 
 echo "Downloading package content from bintray..."
 
-curl --fail -O "https://dl.bintray.com/antelle/generic/branch/master/$VERSION/$GIT_SHA/argon2-browser-$VERSION.tgz"
+curl --fail -O "https://dl.bintray.com/antelle/generic/argon2-browser/branch/master/$VERSION/$GIT_SHA/argon2-browser-$VERSION.tgz"
 
 echo "Extracting..."
 

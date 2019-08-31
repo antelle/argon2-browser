@@ -22,7 +22,7 @@
     "files": [
         {
             "includePattern": "./(argon2-browser-\\d+\\.\\d+\\.\\d+\\.tgz)",
-            "uploadPattern": "{prefix}/$1"
+            "uploadPattern": "argon2-browser/{prefix}/$1"
         }
     ],
     "publish": true
