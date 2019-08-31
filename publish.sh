@@ -75,7 +75,7 @@ echo "Pushing to GihHub..."
 git push --follow-tags
 
 echo "Publishing to npm..."
-npm publish
+npm publish "argon2-browser-$VERSION.tgz"
 
 echo "Cleaning up..."
 rm "argon2-browser-$VERSION.tgz"
