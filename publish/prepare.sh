@@ -58,9 +58,14 @@ echo "Cleaning up..."
 rm "argon2-browser-$VERSION.tgz"
 rm -rf package/
 
-echo "Committing..."
-git add .
-git commit -am "v$VERSION"
+if git diff-index --quiet HEAD --; then
+    echo "No changes, nothing to commit"
+else
+    echo "Committing changes to git..."
+    git add .
+    git commit -am "v$VERSION"
+fi
+
 git tag -s "$VERSION" -m "$VERSION"
 
 echo "Done! Please verify if everything is OK and push."
