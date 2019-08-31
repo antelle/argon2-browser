@@ -8,6 +8,7 @@ GIT_SHA=$(git rev-parse HEAD);
 echo "Publishing v$VERSION ($GIT_SHA)..."
 
 echo "Checking git changes..."
+git update-index -q --refresh
 if git diff-index --quiet HEAD --; then
     echo "Working directory is clean"
 else
@@ -57,6 +58,8 @@ echo "Cleaning up..."
 
 rm -rf package/
 
+echo "Checking git changes..."
+git update-index -q --refresh
 if git diff-index --quiet HEAD --; then
     echo "No changes, nothing to commit"
 else
