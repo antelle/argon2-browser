@@ -18,4 +18,4 @@ shasum dist/argon2.wasm
 perl -pi -e 's/"argon2.js.mem"/null/g' dist/argon2.js
 perl -pi -e 's/$/if(typeof module!=="undefined")module.exports=Module;/' dist/argon2.js
 perl -pi -e 's/typeof Module!=="undefined"\?Module:\{};/typeof self!=="undefined"&&typeof self.Module!=="undefined"?self.Module:{};var jsModule=Module;/g' dist/argon2.js
-perl -pi -e 's/receiveInstantiatedSource\(output\)\{/receiveInstantiatedSource(output){Module=jsModule;/g' dist/argon2.js
+perl -pi -e 's/receiveInstantiatedSource\(output\)\{/receiveInstantiatedSource(output){Module=jsModule;if(typeof self!=="undefined")self.Module=Module;/g' dist/argon2.js
