@@ -36,7 +36,7 @@ function calcBinaryen(method) {
         global.Module.wasmJSMethod === method &&
         global.Module._argon2_hash
     ) {
-        log('Calculating hash....');
+        log('Calculating hash...');
         setTimeout(calcHash, 10);
         return;
     }
@@ -91,7 +91,7 @@ function calcBinaryen(method) {
             root + 'dist/argon2.js',
             function() {
                 log('Script loaded in ' + Math.round(now() - ts) + 'ms');
-                log('Calculating hash....');
+                log('Calculating hash...');
             },
             function() {
                 log('Error loading script');
