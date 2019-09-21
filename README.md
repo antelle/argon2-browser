@@ -33,10 +33,10 @@ Algorithm parameters (`-d -t 100 -m 10 -p 1`):
 
 Environment:
 
-- MacBook pro, Intel Core i5, 2.5GHz (x64)
-- Chrome 55.0.2843.0 (Official Build) canary (64-bit), V8 5.5.1
-- Firefox Nightly 51.0a1 (2016-08-29)
-- IE11 and Edge on Windows 10 (x64, Bootcamp)
+- MacBook pro, Intel Core i5, 2.5GHz (x64), macOS 10.14.6 (18G95)
+- Chrome 76.0.3809.100 (Official Build)
+- Firefox 69.0.1
+- Savari v13.0 (14608.1.49)
 - native argon2 compiled from https://github.com/P-H-C/phc-winner-argon2 @4844d2f
 
 ## Code size
