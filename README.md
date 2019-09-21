@@ -10,37 +10,15 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 ## The numbers
 
-### :warning: they are quite old, WebAssembly is better now
-
-To cut it short, here are the numbers.
-
-Code run time:
-
-![hot run](img/hot-run.png)
-
-Init time + first run time:
-
-![load & first run](img/load-first.png)
-
-## Numbers in table (ms, lower is better)
-
-|                         | Load | First Use | Second Use |
-|-------------------------|------|-----------|------------|
-| Native -O3 SSE          | 0    | 90        | 90         |
-| Native -O3              | 0    | 140       | 140        |
-| Native -O1              | 0    | 300       | 300        |
-| Native -O0              | 0    | 750       | 750        |
-| Chrome asm.js           | 100  | 7500      | 6800       |
-| Chrome WASM             | 350  | 1700      | 1650       |
-| Chrome PNaCl            | 1500 | 200       | 200        |
-| Chrome Interpret s-expr | 1000 | 1650000   | 1650000    |
-| Chrome Interpret binary | 800  | 1800000   | 1800000    |
-| Firefox asm.js          | 360  | 1850      | 1700       |
-| Firefox WASM            | 400  | 1750      | 1650       |
-| Safari asm.js           | 100  | 7500      | 6900       |
-| IE11 asm.js             | 100  | 52000     | 47000      |
-| Edge asm.js             | 65   | 19500     | 18000      |
-| Edge +asm asm.js        | 100  | 2900      | 2850       |
+|                | Time, ms (lower is better) |
+|----------------|----------------------------|
+| Chrome WASM    | 360                        |
+| Firefox WASM   | 340                        |
+| Safari WASM    | 310                        |
+| Native -O3 SSE | 90                         |
+| Native -O3     | 140                        |
+| Native -O1     | 300                        |
+| Native -O0     | 750                        |
 
 ## Test Environment
 
@@ -63,15 +41,10 @@ Environment:
 
 ## Code size
 
-It's hard to measure WebAssembly code size because the project is not finished yet and the size of wrapper is rather large. So, we measure only binary file size (.wasm).
-
-![code size](img/code-size.png)
-
-|             | Code size, kB | Comment    |
-|-------------|---------------|------------|
-| asm.js      | 109           | complete   |
-| WebAssembly | 43            | only .wasm |
-| PNaCl       | 112           | .pexe      |
+| File        | Code size, kB |
+|-------------|---------------|
+| argon2.js   | 16            |
+| argon2.wasm | 31            |
 
 ## Is Argon2 modified?
 
@@ -167,7 +140,7 @@ You can use this module in several ways:
 
 ## Node.js support
 
-Of course, you [can use](examples/node) generated asm.js code in node.js but it's not sensible: you will get much better speed by compiling native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
+Of course you [can use](examples/node) generated asm.js code in node.js but it's not sensible: you will get much better speed by compiling native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
 
 ## Is it used anywhere?
 
