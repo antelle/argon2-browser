@@ -145,7 +145,7 @@ Of course you [can use](examples/node) generated asm.js code in node.js but it's
 ## Is it used anywhere?
 
 It is! [KeeWeb](https://github.com/keeweb/keeweb) (web-based password manager) is using both asm.js and WebAssembly Argon2 implementations.
-[Check out the source code](https://github.com/keeweb/keeweb/blob/develop/app/scripts/util/kdbxweb-init.js#L13), if you're interested.
+[Check out the source code](https://github.com/keeweb/keeweb/blob/develop/app/scripts/util/kdbxweb/kdbxweb-init.js#L11), if you're interested.
 
 ## Building
 
