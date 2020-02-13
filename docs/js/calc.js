@@ -121,10 +121,12 @@ function calcHash() {
     var t_cost = (arg && arg.time) || 10;
     var m_cost = (arg && arg.mem) || 1024;
     var parallelism = (arg && arg.parallelism) || 1;
-    var pwd = allocateArray((arg && arg.pass) || 'password');
-    var pwdlen = arg && arg.pass ? arg.pass.length : 8;
-    var salt = allocateArray((arg && arg.salt) || 'somesalt');
-    var saltlen = arg && arg.salt ? arg.salt.length : 8;
+    var passEncoded = encodeUtf8(arg.pass || 'password');
+    var pwd = allocateArray(passEncoded);
+    var pwdlen = passEncoded.length;
+    var saltEncoded = encodeUtf8(arg.salt || 'somesalt');
+    var salt = allocateArray(saltEncoded);
+    var saltlen = saltEncoded.length;
     var hash = Module.allocate(
         new Array((arg && arg.hashLen) || 32),
         'i8',
@@ -187,11 +189,11 @@ function calcHash() {
     } catch (e) {}
 }
 
-function allocateArray(strOrArr) {
-    var arr =
-        strOrArr instanceof Uint8Array || strOrArr instanceof Array
-            ? strOrArr
-            : new TextEncoder().encode(strOrArr);
+function encodeUtf8(str) {
+    return new TextEncoder().encode(str);
+}
+
+function allocateArray(arr) {
     return Module.allocate(arr, 'i8', Module.ALLOC_NORMAL);
 }
 
