@@ -34,7 +34,7 @@ function calcBinaryen(method) {
     if (
         global.Module &&
         global.Module.wasmJSMethod === method &&
-        global.Module._argon2_hash
+        global.Module._argon2_hash_ext
     ) {
         log('Calculating hash...');
         setTimeout(calcHash, 10);
@@ -106,7 +106,7 @@ function calcBinaryen(method) {
 
 function calcHash() {
     var arg = getArg();
-    if (!Module._argon2_hash) {
+    if (!Module._argon2_hash_ext) {
         return log('Error');
     }
     log(
@@ -135,23 +135,25 @@ function calcHash() {
     var hashlen = (arg && arg.hashLen) || 32;
     var encoded = Module.allocate(new Array(512), 'i8', Module.ALLOC_NORMAL);
     var encodedlen = 512;
+    var secret = 0;
+    var secretlen = 0;
+    var ad = 0;
+    var adlen = 0;
     var argon2_type = (arg && arg.type) || 0;
     var version = 0x13;
     var err;
     try {
-        var res = Module._argon2_hash(
+        var res = Module._argon2_hash_ext(
             t_cost,
             m_cost,
             parallelism,
-            pwd,
-            pwdlen,
-            salt,
-            saltlen,
-            hash,
-            hashlen,
-            encoded,
-            encodedlen,
+            pwd, pwdlen,
+            salt, saltlen,
+            hash, hashlen,
+            encoded, encodedlen,
             argon2_type,
+            secret, secretlen,
+            ad, adlen,
             version
         );
     } catch (e) {

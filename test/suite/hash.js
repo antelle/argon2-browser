@@ -1,40 +1,17 @@
-describe('argon2.hash', function() {
+describe('argon2.hash', function () {
     const { assert } = chai;
 
-    it('should compute hash', async function() {
+    const hash_data = it('should compute hash', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
-            salt: 'somesalt'
+            salt: 'somesalt',
         });
         assert.ok(hash);
         assert.deepStrictEqual(
             hash.hash,
-            new Uint8Array([
-                36,
-                99,
-                163,
-                35,
-                223,
-                30,
-                71,
-                14,
-                26,
-                134,
-                8,
-                54,
-                243,
-                110,
-                116,
-                23,
-                61,
-                129,
-                40,
-                65,
-                101,
-                227,
-                197,
-                230
-            ])
+            /* prettier-ignore */
+            new Uint8Array([36, 99, 163, 35, 223, 30, 71, 14, 26, 134, 8, 54,
+                243, 110, 116, 23, 61, 129, 40, 65, 101, 227, 197, 230])
         );
         assert.strictEqual(
             hash.hashHex,
@@ -46,10 +23,10 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should be able to work several times', async function() {
+    it('should be able to work several times', async function () {
         let hash = await argon2.hash({
             pass: 'p@ssw0rd',
-            salt: 'somesalt'
+            salt: 'somesalt',
         });
         assert.ok(hash);
         assert.strictEqual(
@@ -63,7 +40,7 @@ describe('argon2.hash', function() {
 
         hash = await argon2.hash({
             pass: 'p@ssw0rd2',
-            salt: 'somesalt'
+            salt: 'somesalt',
         });
         assert.ok(hash);
         assert.strictEqual(
@@ -76,11 +53,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash for Argon2d', async function() {
+    it('should compute hash for Argon2d', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            type: argon2.ArgonType.Argon2d
+            type: argon2.ArgonType.Argon2d,
         });
         assert.strictEqual(
             hash.encoded,
@@ -88,11 +65,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash for Argon2i', async function() {
+    it('should compute hash for Argon2i', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            type: argon2.ArgonType.Argon2i
+            type: argon2.ArgonType.Argon2i,
         });
         assert.strictEqual(
             hash.encoded,
@@ -100,11 +77,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash for Argon2id', async function() {
+    it('should compute hash for Argon2id', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            type: argon2.ArgonType.Argon2id
+            type: argon2.ArgonType.Argon2id,
         });
         assert.strictEqual(
             hash.encoded,
@@ -112,11 +89,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash with different time complexity', async function() {
+    it('should compute hash with different time complexity', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            time: 10
+            time: 10,
         });
         assert.strictEqual(
             hash.encoded,
@@ -124,11 +101,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash with different memory complexity', async function() {
+    it('should compute hash with different memory complexity', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            mem: 2048
+            mem: 2048,
         });
         assert.strictEqual(
             hash.encoded,
@@ -136,11 +113,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash with different length', async function() {
+    it('should compute hash with different length', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            hashLen: 32
+            hashLen: 32,
         });
         assert.strictEqual(
             hash.encoded,
@@ -148,11 +125,11 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash with different parallelism', async function() {
+    it('should compute hash with different parallelism', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
             salt: 'somesalt',
-            parallelism: 4
+            parallelism: 4,
         });
         assert.strictEqual(
             hash.encoded,
@@ -160,16 +137,40 @@ describe('argon2.hash', function() {
         );
     });
 
-    it('should compute hash of a string with unicode characters', async function() {
+    it('should compute hash of a string with unicode characters', async function () {
         const hash = await argon2.hash({
             pass: '汉字漢字',
             salt: 'asdfasdfasdfasdf',
             type: argon2.ArgonType.Argon2id,
-            hashLen: 32
+            hashLen: 32,
         });
         assert.strictEqual(
             hash.encoded,
             '$argon2id$v=19$m=1024,t=1,p=1$YXNkZmFzZGZhc2RmYXNkZg$zzqgQLEjqikDwII1Qk2ZbyoCG12D25W7tXSgejiwiS0'
+        );
+    });
+
+    it('should compute hash with additional data', async function () {
+        const hash = await argon2.hash({
+            pass: 'p@ssw0rd',
+            salt: 'somesalt',
+            ad: new Uint8Array([1, 2, 3]),
+        });
+        assert.strictEqual(
+            hash.encoded,
+            '$argon2d$v=19$m=1024,t=1,p=1$c29tZXNhbHQ$CuATwqimHlFHq0mTT0qnozY4kCjrGg7X'
+        );
+    });
+
+    it('should compute hash with a secret', async function () {
+        const hash = await argon2.hash({
+            pass: 'p@ssw0rd',
+            salt: 'somesalt',
+            secret: new Uint8Array([1, 2, 3]),
+        });
+        assert.strictEqual(
+            hash.encoded,
+            '$argon2d$v=19$m=1024,t=1,p=1$c29tZXNhbHQ$kPOHk/DlE6du1nkbKKom8FV+fcNjviLW'
         );
     });
 });

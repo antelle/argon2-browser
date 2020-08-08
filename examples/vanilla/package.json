@@ -10,6 +10,6 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "argon2-browser": "^1.8.0"
+    "argon2-browser": "^1.13.0"
   }
 }

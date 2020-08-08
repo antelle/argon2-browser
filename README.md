@@ -113,6 +113,8 @@ argon2.hash({
     mem: 1024, // used memory, in KiB
     hashLen: 24, // desired hash length
     parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
+    secret: new Uint8Array([...]), // optional secret data
+    ad: new Uint8Array([...]), // optional associated data
     type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i
     distPath: '' // asm.js script location, without trailing slash
 })
