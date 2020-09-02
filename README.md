@@ -12,13 +12,13 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 |                | Time, ms (lower is better) |
 |----------------|----------------------------|
-| Chrome WASM    | 360                        |
-| Firefox WASM   | 340                        |
-| Safari WASM    | 310                        |
-| Native -O3 SSE | 90                         |
-| Native -O3     | 140                        |
-| Native -O1     | 300                        |
-| Native -O0     | 750                        |
+| Chrome WASM    | 225                        |
+| Firefox WASM   | 195                        |
+| Safari WASM    | 174                        |
+| Native -O3 SSE |  15                        |
+| Native -O3     |  42                        |
+| Native -O1     |  55                        |
+| Native -O0     | 395                        |
 
 ## Test Environment
 
@@ -33,10 +33,10 @@ Algorithm parameters (`-d -t 100 -m 10 -p 1`):
 
 Environment:
 
-- MacBook pro, Intel Core i5, 2.5GHz (x64), macOS 10.14.6 (18G95)
-- Chrome 76.0.3809.100 (Official Build)
-- Firefox 69.0.1
-- Savari v13.0 (14608.1.49)
+- MacBook pro 2020, Intel Core i7, 2.3GHz (x64), macOS 10.14.6 (18G95)
+- Chrome 85.0.4183.83 (Official Build)
+- Firefox 80.0.1
+- Safari 13.1.2 (15609.3.5.1.3)
 - native argon2 compiled from https://github.com/P-H-C/phc-winner-argon2 @4844d2f
 
 ## Code size
@@ -44,45 +44,20 @@ Environment:
 | File        | Code size, kB |
 |-------------|---------------|
 | argon2.js   | 16            |
-| argon2.wasm | 31            |
+| argon2.wasm | 25            |
 
 ## Is Argon2 modified?
 
 The only change is [disabling threading support](https://github.com/antelle/argon2-browser/commit/4b8950395c8c03a888ba6f417a4001458cdd3231).
 
-## Difficulties
-
-Argon2 is using uint64, which is not supported by JavaScript.
-This function is called ~30M times per one iteration:
-```cpp
-uint64_t fBlaMka(uint64_t x, uint64_t y) {
-    const uint64_t m = UINT64_C(0xFFFFFFFF);
-    const uint64_t xy = (x & m) * (y & m);
-    return x + y + 2 * xy;
-}
-```
-
-And this one:
-```cpp
-uint64_t rotr64(const uint64_t w, const unsigned c) {
-    return (w >> c) | (w << (64 - c));
-}
-```
-
-In C++, we can make use of SSE for 64-bit arithmetics. In JavaScript, when no 64-bit unsigned long type is available, different engines have different time penalties of this operation.
-
-WASM can support 64-bit integers but it requires compilation with LLVM, and not as asm.js => wasm. But this build is producing bad wasm for now. A simple experiment can be found in [perf-test.c](perf-test.c): compiling it with i64 support in LLVM gives us 4x boost.
-
 ## JS Library
 
-Until WASM is mature, js library is using only asm.js. Here's how to try it.
-
-Install with npm:
+The library can be installed from npm:
 ```bash
 npm install argon2-browser
 ```
 
-Add script to your HTML:
+Then add script to your HTML or use your favorite bundler:
 ```html
 <script src="node_modules/argon2-browser/lib/argon2.js"></script>
 ```
@@ -101,7 +76,6 @@ argon2.verify({ pass: 'password', encoded: 'enc-hash' })
     .catch(e => console.error(e.message, e.code))
 ```
 
-Bring your own bundler and promise polyfill.  
 Other parameters:
 ```javascript
 argon2.hash({
@@ -116,7 +90,6 @@ argon2.hash({
     secret: new Uint8Array([...]), // optional secret data
     ad: new Uint8Array([...]), // optional associated data
     type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i
-    distPath: '' // asm.js script location, without trailing slash
 })
 // result
 .then(res => {
@@ -142,11 +115,11 @@ You can use this module in several ways:
 
 ## Node.js support
 
-Of course you [can use](examples/node) generated asm.js code in node.js but it's not sensible: you will get much better speed by compiling native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
+Of course you [can use](examples/node) generated WASM in node.js, but it's not sensible: you will get much better speed by compiling it as a native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
 
 ## Is it used anywhere?
 
-It is! [KeeWeb](https://github.com/keeweb/keeweb) (web-based password manager) is using both asm.js and WebAssembly Argon2 implementations.
+It is! [KeeWeb](https://github.com/keeweb/keeweb) (web-based password manager) is using it as a password hashing function implementation.
 [Check out the source code](https://github.com/keeweb/keeweb/blob/develop/app/scripts/util/kdbxweb/kdbxweb-init.js#L11), if you're interested.
 
 ## Building
@@ -156,7 +129,7 @@ You can build everything with
 ./build.sh
 ```
 
-Prerequesties:
+Prerequisites:
 - emscripten with WebAssembly support ([howto](http://webassembly.org/getting-started/developers-guide/))
 - CMake
 

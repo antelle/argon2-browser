@@ -4,7 +4,7 @@ var global = typeof window === 'undefined' ? self : window;
 var root = typeof window === 'undefined' ? '../' : '';
 
 function calc(fn) {
-    return function(e) {
+    return function (e) {
         e.preventDefault();
         try {
             fn();
@@ -61,7 +61,7 @@ function calcBinaryen(method) {
     );
     const wasmMemory = new WebAssembly.Memory({
         initial: initialMemory,
-        maximum: totalMemory
+        maximum: totalMemory,
     });
 
     global.Module = {
@@ -70,35 +70,34 @@ function calcBinaryen(method) {
         setStatus: log,
         wasmBinary: null,
         wasmJSMethod: method,
-        asmjsCodeFile: root + 'dist/argon2-asm.min.asm.js',
         wasmBinaryFile: root + 'dist/argon2.wasm',
         wasmTextFile: root + 'dist/argon2.wast',
         wasmMemory: wasmMemory,
         buffer: wasmMemory.buffer,
-        TOTAL_MEMORY: initialMemory * WASM_PAGE_SIZE
+        TOTAL_MEMORY: initialMemory * WASM_PAGE_SIZE,
     };
 
     log('Loading wasm...');
     var xhr = new XMLHttpRequest();
     xhr.open('GET', root + 'dist/argon2.wasm', true);
     xhr.responseType = 'arraybuffer';
-    xhr.onload = function() {
+    xhr.onload = function () {
         global.Module.wasmBinary = xhr.response;
         global.Module.postRun = calcHash;
         var ts = now();
         log('Wasm loaded, loading script...');
         loadScript(
             root + 'dist/argon2.js',
-            function() {
+            function () {
                 log('Script loaded in ' + Math.round(now() - ts) + 'ms');
                 log('Calculating hash...');
             },
-            function() {
+            function () {
                 log('Error loading script');
             }
         );
     };
-    xhr.onerror = function() {
+    xhr.onerror = function () {
         log('Error loading wasm');
     };
     xhr.send(null);
@@ -112,7 +111,7 @@ function calcHash() {
     log(
         'Params: ' +
             Object.keys(arg)
-                .map(function(key) {
+                .map(function (key) {
                     return key + '=' + arg[key];
                 })
                 .join(', ')
@@ -147,13 +146,19 @@ function calcHash() {
             t_cost,
             m_cost,
             parallelism,
-            pwd, pwdlen,
-            salt, saltlen,
-            hash, hashlen,
-            encoded, encodedlen,
+            pwd,
+            pwdlen,
+            salt,
+            saltlen,
+            hash,
+            hashlen,
+            encoded,
+            encodedlen,
             argon2_type,
-            secret, secretlen,
-            ad, adlen,
+            secret,
+            secretlen,
+            ad,
+            adlen,
             version
         );
     } catch (e) {
@@ -169,7 +174,7 @@ function calcHash() {
         log(
             'Hash: ' +
                 hashArr
-                    .map(function(b) {
+                    .map(function (b) {
                         return ('0' + (0xff & b).toString(16)).slice(-2);
                     })
                     .join('')
