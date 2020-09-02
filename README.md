@@ -37,7 +37,7 @@ Environment:
 - Chrome 85.0.4183.83 (Official Build)
 - Firefox 80.0.1
 - Safari 13.1.2 (15609.3.5.1.3)
-- native argon2 compiled from https://github.com/P-H-C/phc-winner-argon2 @4844d2f
+- native argon2 compiled from https://github.com/P-H-C/phc-winner-argon2 @440ceb9
 
 ## Code size
 
