@@ -9,9 +9,7 @@ sudo: required
 before_install:
   - ci/install.sh
 script:
-  - source emsdk/emsdk_env.sh
-  - ./build.sh
-  - ci/post-build.sh
+  - source emsdk/emsdk_env.sh && ./build.sh && ci/post-build.sh
 #deploy:
 #  - provider: bintray
 #    on:
