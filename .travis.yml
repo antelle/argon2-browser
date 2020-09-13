@@ -9,6 +9,8 @@ services:
 before_install:
   - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:latest bash
 script:
+  - emsdk install latest
+  - emsdk activate latest
   - ci/build.sh
 deploy:
   - provider: bintray
