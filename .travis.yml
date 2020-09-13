@@ -9,7 +9,8 @@ sudo: required
 before_install:
   - ci/install.sh
 script:
-  - ci/build.sh
+  - build.sh
+  - ci/post-build.sh
 #deploy:
 #  - provider: bintray
 #    on:
