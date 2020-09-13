@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-docker exec -it emscripten emsdk update && emsdk install latest && emsdk activate latest
+docker exec -it emscripten emsdk update-tags && emsdk install latest && emsdk activate latest
 
 docker exec -it emscripten ./build.sh
 
