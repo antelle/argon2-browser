@@ -46,9 +46,11 @@ echo "Copying files..."
 
 cp package/dist/argon2.js dist/argon2.js
 cp package/dist/argon2.wasm dist/argon2.wasm
+cp package/dist/argon2-simd.wasm dist/argon2-simd.wasm
 
 cp package/dist/argon2.js docs/dist/argon2.js
 cp package/dist/argon2.wasm docs/dist/argon2.wasm
+cp package/dist/argon2-simd.wasm docs/dist/argon2-simd.wasm
 
 cp package/lib/argon2.js lib/argon2.js
 cp package/package.json package.json
