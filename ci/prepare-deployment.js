@@ -7,16 +7,16 @@ const version = packageJson.version;
 const date = new Date().toISOString().split('T')[0];
 
 const commit = process.argv
-    .filter(arg => arg.startsWith('--commit'))
-    .map(arg => arg.split('=')[1])[0];
+    .filter((arg) => arg.startsWith('--commit'))
+    .map((arg) => arg.split('=')[1])[0];
 
 const tag = process.argv
-    .filter(arg => arg.startsWith('--tag'))
-    .map(arg => arg.split('=')[1])[0];
+    .filter((arg) => arg.startsWith('--tag'))
+    .map((arg) => arg.split('=')[1])[0];
 
 const branch = process.argv
-    .filter(arg => arg.startsWith('--branch'))
-    .map(arg => arg.split('=')[1])[0];
+    .filter((arg) => arg.startsWith('--branch'))
+    .map((arg) => arg.split('=')[1])[0];
 
 const fileSafeBranch = branch.replace(/[^\w.]+/g, '_');
 
@@ -33,7 +33,11 @@ console.log(`Release checksums:\n${shaSums}`);
 
 const maxFileGrowth = 5;
 
-for (const file of ['dist/argon2.js', 'dist/argon2.wasm']) {
+for (const file of [
+    'dist/argon2.js',
+    'dist/argon2.wasm',
+    'dist/argon2-simd.wasm',
+]) {
     const gitSize = child_process
         .execSync(`git ls-tree --long ${commit} "${file}"`)
         .toString()
@@ -62,7 +66,7 @@ config.version = {
     name: versionName,
     desc: versionName,
     released: date,
-    vcs_tag: tag
+    vcs_tag: tag,
 };
 
 for (const file of config.files) {

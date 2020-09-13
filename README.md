@@ -10,15 +10,16 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 ## The numbers
 
-|                | Time, ms (lower is better) |
-|----------------|----------------------------|
-| Chrome WASM    | 225                        |
-| Firefox WASM   | 195                        |
-| Safari WASM    | 174                        |
-| Native -O3 SSE |  15                        |
-| Native -O3     |  42                        |
-| Native -O1     |  55                        |
-| Native -O0     | 395                        |
+|                  | Time, ms (lower is better) |
+|------------------|----------------------------|
+| Chrome WASM      | 225                        |
+| Chrome WASM SIMD | 119                        |
+| Firefox WASM     | 195                        |
+| Safari WASM      | 174                        |
+| Native -O3 SSE   |  15                        |
+| Native -O3       |  42                        |
+| Native -O1       |  55                        |
+| Native -O0       | 395                        |
 
 ## Test Environment
 
@@ -49,6 +50,16 @@ Environment:
 ## Is Argon2 modified?
 
 The only change is [disabling threading support](https://github.com/antelle/argon2-browser/commit/4b8950395c8c03a888ba6f417a4001458cdd3231).
+
+## SIMD
+
+SIMD is not quite here in WebAssembly, however for those who would like to give it a try,
+we already provide a working build with SIMD. At the moment it works only in Chrome,
+to be able to use it, you need to either add
+[this origin trial](https://developers.chrome.com/origintrials/#/view_trial/-4708513410415853567) to your website,
+or enable the SIMD feature in Chrome flags.
+
+More about WebAssembly SIMD support in V8: https://v8.dev/features/simd
 
 ## JS Library
 

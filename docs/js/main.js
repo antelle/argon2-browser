@@ -1,6 +1,6 @@
 'use strict';
 
-document.getElementById('frm').addEventListener('submit', function(e) {
+document.getElementById('frm').addEventListener('submit', function (e) {
     e.preventDefault();
 });
 document
@@ -8,8 +8,13 @@ document
     .addEventListener('click', calc(calcWasm));
 document
     .getElementById('btnCalcWasmWorker')
-    .addEventListener('click', function() {
+    .addEventListener('click', function () {
         calcWorker('wasm');
+    });
+document
+    .getElementById('btnCalcWasmSimd')
+    .addEventListener('click', function () {
+        calcWorker('simd');
     });
 
 function loadScript(src, onload, onerror) {
@@ -36,7 +41,7 @@ function calcWorker(method) {
     worker = new Worker('js/worker.js');
     worker.method = method;
     var loaded = false;
-    worker.onmessage = function(e) {
+    worker.onmessage = function (e) {
         log(e.data.msg);
         if (!loaded) {
             loaded = true;
@@ -53,7 +58,7 @@ function getArg() {
         mem: +(document.getElementById('txtMem').value || 1024),
         hashLen: +(document.getElementById('txtLen').value || 32),
         parallelism: +(document.getElementById('txtPar').value || 1),
-        type: +document.querySelector('[name=radioType]:checked').value
+        type: +document.querySelector('[name=radioType]:checked').value,
     };
 }
 

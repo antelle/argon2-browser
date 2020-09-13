@@ -1,4 +1,5 @@
 *
 !dist/argon2.js
 !dist/argon2.wasm
+!dist/argon2-simd.wasm
 !lib/*.js

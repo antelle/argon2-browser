@@ -18,7 +18,11 @@ function calcWasm() {
     calcBinaryen('native-wasm');
 }
 
-function calcBinaryen(method) {
+function calcSimd() {
+    calcBinaryen('native-wasm', { simd: true });
+}
+
+function calcBinaryen(method, options) {
     clearLog();
 
     if (!global.WebAssembly) {
@@ -70,16 +74,19 @@ function calcBinaryen(method) {
         setStatus: log,
         wasmBinary: null,
         wasmJSMethod: method,
-        wasmBinaryFile: root + 'dist/argon2.wasm',
-        wasmTextFile: root + 'dist/argon2.wast',
         wasmMemory: wasmMemory,
         buffer: wasmMemory.buffer,
         TOTAL_MEMORY: initialMemory * WASM_PAGE_SIZE,
     };
 
+    var wasmFileName = 'argon2.wasm';
+    if (options && options.simd) {
+        wasmFileName = 'argon2-simd.wasm';
+    }
+
     log('Loading wasm...');
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', root + 'dist/argon2.wasm', true);
+    xhr.open('GET', root + 'dist/' + wasmFileName, true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function () {
         global.Module.wasmBinary = xhr.response;

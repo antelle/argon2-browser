@@ -2,12 +2,15 @@
 
 var calcHashArg;
 
-self.onmessage = function(e) {
+self.onmessage = function (e) {
     self.postMessage('calc:' + e.data.calc);
     calcHashArg = e.data.arg;
     switch (e.data.calc) {
         case 'wasm':
             calcWasm();
+            break;
+        case 'simd':
+            calcSimd();
             break;
     }
 };

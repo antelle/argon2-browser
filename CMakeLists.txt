@@ -17,11 +17,16 @@ set(sources
     argon2/src/argon2.c
     argon2/src/core.c
     argon2/src/encoding.c
-    argon2/src/ref.c
     argon2/src/thread.c
 
     src/argon2_library.c
 )
+
+if(${CMAKE_C_FLAGS} MATCHES simd)
+    list(APPEND sources argon2/src/opt.c)
+else()
+    list(APPEND sources argon2/src/ref.c)
+endif()
 
 add_executable(argon2 ${sources})
 
