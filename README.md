@@ -61,6 +61,8 @@ or enable the SIMD feature in Chrome flags.
 
 More about WebAssembly SIMD support in V8: https://v8.dev/features/simd
 
+To use the SIMD version, load `argon2-simd.wasm` instead of `argon2.wasm`.
+
 ## JS Library
 
 The library can be installed from npm:
