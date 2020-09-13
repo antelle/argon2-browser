@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-docker exec -it emscripten ci/isntall.sh
+docker exec -it emscripten ci/install.sh
 
 docker exec -it emscripten ./build.sh
 
