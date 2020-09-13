@@ -10,16 +10,17 @@ Argon2 is a password-hashing function, the winner of Password Hashing Competitio
 
 ## The numbers
 
-|                  | Time, ms (lower is better) |
-|------------------|----------------------------|
-| Chrome WASM      | 225                        |
-| Chrome WASM SIMD | 119                        |
-| Firefox WASM     | 195                        |
-| Safari WASM      | 174                        |
-| Native -O3 SSE   |  15                        |
-| Native -O3       |  42                        |
-| Native -O1       |  55                        |
-| Native -O0       | 395                        |
+|                   | Time, ms (lower is better) |
+|-------------------|----------------------------|
+| Chrome WASM       | 225                        |
+| Chrome WASM+SIMD  | 119                        |
+| Firefox WASM      | 195                        |
+| Firefox WASM+SIMD | 135                        |
+| Safari WASM       | 174                        |
+| Native -O3 SSE    |  15                        |
+| Native -O3        |  42                        |
+| Native -O1        |  55                        |
+| Native -O0        | 395                        |
 
 ## Test Environment
 
@@ -60,6 +61,8 @@ to be able to use it, you need to either add
 or enable the SIMD feature in Chrome flags.
 
 More about WebAssembly SIMD support in V8: https://v8.dev/features/simd
+
+On Firefox you need to enable `javascript.options.wasm_simd` option in about:config.
 
 To use the SIMD version, load `argon2-simd.wasm` instead of `argon2.wasm`.
 
