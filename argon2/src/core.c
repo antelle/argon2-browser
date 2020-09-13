@@ -329,11 +329,11 @@ static int fill_memory_blocks_mt(argon2_instance_t *instance) {
                 position.lane = l;
                 position.slice = (uint8_t)s;
                 position.index = 0;
+#ifdef __EMSCRIPTEN_PTHREADS__
                 thr_data[l].instance_ptr =
                     instance; /* preparing the thread input */
                 memcpy(&(thr_data[l].pos), &position,
                        sizeof(argon2_position_t));
-#ifdef __EMSCRIPTEN_PTHREADS__
                 if (argon2_thread_create(&thread[l], &fill_segment_thr,
                                          (void *)&thr_data[l])) {
                     /* Wait for already running threads */
