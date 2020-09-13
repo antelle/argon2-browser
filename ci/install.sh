@@ -2,7 +2,8 @@
 
 set -euxo pipefail
 
-cd /emsdk_portable
-git pull
-emsdk install latest
-emsdk activate latest
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+cd ..

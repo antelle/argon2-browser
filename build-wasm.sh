@@ -10,7 +10,7 @@ fi
 
 cmake \
     -DOUTPUT_NAME="argon2" \
-    -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake \
+    -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
     -DCMAKE_VERBOSE_MAKEFILE=OFF \
     -DCMAKE_BUILD_TYPE=MinSizeRel \
     -DCMAKE_C_FLAGS="-O3 $ARGON_JS_EXTRA_C_FLAGS" \

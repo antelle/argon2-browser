@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
-set -o pipefail
-
-docker exec -it emscripten ci/install.sh
-
-docker exec -it emscripten ./build.sh
+set -euxo pipefail
 
 npm test
 npm run prepare-deployment -- --commit="$TRAVIS_COMMIT" --tag="$TRAVIS_TAG" --branch="$TRAVIS_BRANCH"
