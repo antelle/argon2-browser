@@ -15,6 +15,7 @@ mv dist/argon2.wasm dist/argon2-simd.wasm
 
 ./clean-cmake.sh
 ARGON_JS_BUILD_BUILD_WITH_SIMD=0 ./build-wasm.sh
+cp dist/argon2.worker.js docs/dist/argon2.worker.js
 cp dist/argon2.js docs/dist/argon2.js
 cp dist/argon2.wasm docs/dist/argon2.wasm
 

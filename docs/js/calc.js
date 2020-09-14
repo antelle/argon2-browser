@@ -66,6 +66,7 @@ function calcBinaryen(method, options) {
     const wasmMemory = new WebAssembly.Memory({
         initial: initialMemory,
         maximum: totalMemory,
+        shared: true,
     });
 
     global.Module = {
