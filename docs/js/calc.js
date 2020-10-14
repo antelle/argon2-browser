@@ -131,6 +131,7 @@ function calcHash() {
     var pwd = allocateArray(passEncoded);
     var pwdlen = passEncoded.length;
     var saltEncoded = encodeUtf8(arg.salt || 'somesalt');
+    var argon2_type = (arg && arg.type) || 0;
     var salt = allocateArray(saltEncoded);
     var saltlen = saltEncoded.length;
     var hash = Module.allocate(
@@ -139,13 +140,23 @@ function calcHash() {
         Module.ALLOC_NORMAL
     );
     var hashlen = (arg && arg.hashLen) || 32;
-    var encoded = Module.allocate(new Array(512), 'i8', Module.ALLOC_NORMAL);
-    var encodedlen = 512;
+    var encodedlen = Module._argon2_encodedlen(
+        t_cost,
+        m_cost,
+        parallelism,
+        saltlen,
+        hashlen,
+        argon2_type
+    );
+    var encoded = Module.allocate(
+        new Array(encodedlen),
+        'i8',
+        Module.ALLOC_NORMAL
+    );
     var secret = 0;
     var secretlen = 0;
     var ad = 0;
     var adlen = 0;
-    var argon2_type = (arg && arg.type) || 0;
     var version = 0x13;
     var err;
     try {

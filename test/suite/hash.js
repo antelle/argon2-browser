@@ -173,4 +173,16 @@ describe('argon2.hash', function () {
             '$argon2d$v=19$m=1024,t=1,p=1$c29tZXNhbHQ$kPOHk/DlE6du1nkbKKom8FV+fcNjviLW'
         );
     });
+
+    it('should compute long hashes', async function () {
+        const hash = await argon2.hash({
+            pass: 'p@ssw0rd',
+            salt: 'somesalt',
+            hashLen: 100000,
+        });
+        assert.match(
+            hash.encoded,
+            /^\$argon2d\$v=19\$m=1024,t=1,p=1\$c29tZXNhbHQ\$A0myEnizYlgEZQ7gUkfNESi8\/.*\/2Zy0G7fzjEl\/bKA$/
+        );
+    });
 });
