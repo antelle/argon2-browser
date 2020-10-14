@@ -149,7 +149,7 @@ function calcHash() {
         argon2_type
     );
     var encoded = Module.allocate(
-        new Array(encodedlen),
+        new Array(encodedlen + 1),
         'i8',
         Module.ALLOC_NORMAL
     );
