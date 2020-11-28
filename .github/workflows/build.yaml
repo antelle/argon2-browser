@@ -23,6 +23,8 @@ jobs:
         run: npm run prepare-deployment
       - name: Package
         run: npm pack
+      - name: List
+        run: ls -l
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
