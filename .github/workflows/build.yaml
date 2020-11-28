@@ -7,14 +7,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-#      - name: Install prerequisites
-#        run: ci/install.sh
+      - name: Install prerequisites
+        run: ci/install.sh
       - name: NPM install
         run: npm ci
-#      - name: Build
-#        run: source emsdk/emsdk_env.sh && ./build.sh
-#      - name: Test
-#        run: npm test
+      - name: Build
+        run: source emsdk/emsdk_env.sh && ./build.sh
+      - name: Test
+        run: npm test
       - name: Prepare deployment
         id: prepare-deployment
         run: npm run prepare-deployment

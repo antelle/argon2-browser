@@ -60,21 +60,6 @@ for (const file of [
 }
 console.log(`File growth is within ${maxFileGrowth}%, proceeding.\n`);
 
-// const config = require('../.bintray.json');
-// config.version = {
-//     name: versionName,
-//     desc: versionName,
-//     released: date,
-//     vcs_tag: tag,
-// };
-//
-// for (const file of config.files) {
-//     file.uploadPattern = file.uploadPattern.replace('{prefix}', filePrefix);
-// }
-
-// fs.writeFileSync('bintray.json', JSON.stringify(config, null, 2));
-// console.log('Created bintray.json');
-
 setOutput('package-version', version);
 setOutput('bintray-version', versionName);
 setOutput('upload-path', filePrefix);
