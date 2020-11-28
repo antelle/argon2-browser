@@ -22,6 +22,7 @@
     },
     "homepage": "https://github.com/antelle/argon2-browser#readme",
     "devDependencies": {
+        "@actions/core": "^1.2.6",
         "chai": "^4.2.0",
         "http-server": "^0.12.3",
         "mocha": "^8.1.3",

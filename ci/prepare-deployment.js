@@ -1,22 +1,22 @@
 const fs = require('fs');
-const child_process = require('child_process');
+const { execSync } = require('child_process');
+const { setOutput } = require('@actions/core');
 
 const packageJson = require('../package.json');
 const version = packageJson.version;
 
 const date = new Date().toISOString().split('T')[0];
 
-const commit = process.argv
-    .filter((arg) => arg.startsWith('--commit'))
-    .map((arg) => arg.split('=')[1])[0];
-
-const tag = process.argv
-    .filter((arg) => arg.startsWith('--tag'))
-    .map((arg) => arg.split('=')[1])[0];
-
-const branch = process.argv
-    .filter((arg) => arg.startsWith('--branch'))
-    .map((arg) => arg.split('=')[1])[0];
+const commit = execSync('git rev-parse HEAD').toString().trim();
+const branch = execSync('git branch --show-current').toString().trim();
+let tag;
+try {
+    tag = execSync('git describe --exact-match --tags', {
+        stdio: 'ignore',
+    })
+        .toString()
+        .trim();
+} catch {}
 
 const fileSafeBranch = branch.replace(/[^\w.]+/g, '_');
 
@@ -28,7 +28,7 @@ console.log(
         (tag ? 'and tag ' + tag : 'without tag')
 );
 
-const shaSums = child_process.execSync('shasum dist/argon2.*').toString();
+const shaSums = execSync('shasum dist/argon2.*').toString();
 console.log(`Release checksums:\n${shaSums}`);
 
 const maxFileGrowth = 5;
@@ -38,8 +38,7 @@ for (const file of [
     'dist/argon2.wasm',
     'dist/argon2-simd.wasm',
 ]) {
-    const gitSize = child_process
-        .execSync(`git ls-tree --long ${commit} "${file}"`)
+    const gitSize = execSync(`git ls-tree --long ${commit} "${file}"`)
         .toString()
         .split(/\s+/)[3];
 
@@ -61,18 +60,6 @@ for (const file of [
 }
 console.log(`File growth is within ${maxFileGrowth}%, proceeding.\n`);
 
-const config = require('../.bintray.json');
-config.version = {
-    name: versionName,
-    desc: versionName,
-    released: date,
-    vcs_tag: tag,
-};
-
-for (const file of config.files) {
-    file.uploadPattern = file.uploadPattern.replace('{prefix}', filePrefix);
-}
-
-fs.writeFileSync('bintray.json', JSON.stringify(config, null, 2));
-
-console.log('Created bintray.json');
+setOutput('package-version', version);
+setOutput('bintray-version', versionName);
+setOutput('upload-path', filePrefix);

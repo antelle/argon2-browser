@@ -1,4 +1,4 @@
-# Argon2 in browser [![Build status](https://travis-ci.org/antelle/argon2-browser.svg?branch=master)](https://travis-ci.org/antelle/argon2-browser)
+# Argon2 in browser ![Build](https://github.com/antelle/argon2-browser/workflows/Build/badge.svg)
 
 Argon2 is a password-hashing function, the winner of Password Hashing Competition. Here Argon2 library is compiled for browser runtime.
 
