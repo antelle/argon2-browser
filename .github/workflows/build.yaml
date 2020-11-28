@@ -27,5 +27,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: argon2-browser.tgz
-          path: perf-*.c
+          path: perf-test.c
 #          path: argon2-browser-*.tgz
