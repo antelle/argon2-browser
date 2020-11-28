@@ -32,3 +32,4 @@ jobs:
           version: ${{ steps.prepare-deployment.outputs.bintray-version }}
           upload_path: ${{ steps.prepare-deployment.outputs.upload-path }}
           publish: 1
+          calculate_metadata: false
