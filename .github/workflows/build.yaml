@@ -27,7 +27,7 @@ jobs:
 #        id: package-version
 #        uses: martinbeentjes/npm-get-version-action@master
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: package
           if-no-files-found: error
