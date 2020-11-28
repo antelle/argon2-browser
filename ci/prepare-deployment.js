@@ -6,11 +6,15 @@ const version = packageJson.version;
 
 const date = new Date().toISOString().split('T')[0];
 
-const commit = execSync('git rev-parse HEAD').toString();
-const branch = execSync('git branch --show-current').toString();
+const commit = execSync('git rev-parse HEAD').toString().trim();
+const branch = execSync('git branch --show-current').toString().trim();
 let tag;
 try {
-    tag = execSync('git describe --exact-match --tags').toString();
+    tag = execSync('git describe --exact-match --tags', {
+        stdio: 'ignore',
+    })
+        .toString()
+        .trim();
 } catch {}
 
 const fileSafeBranch = branch.replace(/[^\w.]+/g, '_');

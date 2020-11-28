@@ -11,10 +11,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Tell where we are
-        run: pwd
-      - name: List
-        run: ls -lah
       - name: Install prerequisites
         run: ci/install.sh
       - name: NPM install
