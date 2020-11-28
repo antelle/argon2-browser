@@ -11,22 +11,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Install prerequisites
-        run: ci/install.sh
-      - name: NPM install
-        run: npm ci
-      - name: Build
-        run: source emsdk/emsdk_env.sh && ./build.sh
-      - name: Test
-        run: npm test
-      - name: Prepare deployment
-        run: npm run prepare-deployment
-      - name: Package
-        run: npm pack
-      - name: List
-        run: ls -l
+#      - name: Install prerequisites
+#        run: ci/install.sh
+#      - name: NPM install
+#        run: npm ci
+#      - name: Build
+#        run: source emsdk/emsdk_env.sh && ./build.sh
+#      - name: Test
+#        run: npm test
+#      - name: Prepare deployment
+#        run: npm run prepare-deployment
+#      - name: Package
+#        run: npm pack
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: argon2-browser.tgz
-          path: argon2-browser-*.tgz
+          path: perf-*.c
+#          path: argon2-browser-*.tgz
