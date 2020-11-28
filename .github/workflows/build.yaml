@@ -26,4 +26,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
+          name: 'argon2-browser.tgz'
           path: argon2-browser-*.tgz
