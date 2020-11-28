@@ -1,0 +1,19 @@
+name: CI Checks
+on:
+  push:
+    branches:
+#      - master
+  pull_request:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install prerequisites
+        run: ci/install.sh
+      - name: NPM install
+        run: npm ci
+      - name: Build
+        run: source emsdk/emsdk_env.sh && ./build.sh && ci/post-build.sh
