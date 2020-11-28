@@ -23,11 +23,18 @@ jobs:
         run: npm run prepare-deployment
       - name: Package
         run: npm pack
-      - name: Get NPM version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
+#      - name: Get NPM version
+#        id: package-version
+#        uses: martinbeentjes/npm-get-version-action@master
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: argon2-browser.tgz
-          path: argon2-browser-${{ steps.package-version.outputs.current-version }}.tgz
+          name: package
+          if-no-files-found: error
+          path: |
+            README.md
+            package.json
+            lib/argon2.js
+            dist/argon2.wasm
+            dist/argon2-simd.wasm
+            dist/argon2.js
