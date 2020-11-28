@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
+const { setOutput } = require('@actions/core');
 
 const packageJson = require('../package.json');
 const version = packageJson.version;
@@ -59,18 +60,21 @@ for (const file of [
 }
 console.log(`File growth is within ${maxFileGrowth}%, proceeding.\n`);
 
-const config = require('../.bintray.json');
-config.version = {
-    name: versionName,
-    desc: versionName,
-    released: date,
-    vcs_tag: tag,
-};
+// const config = require('../.bintray.json');
+// config.version = {
+//     name: versionName,
+//     desc: versionName,
+//     released: date,
+//     vcs_tag: tag,
+// };
+//
+// for (const file of config.files) {
+//     file.uploadPattern = file.uploadPattern.replace('{prefix}', filePrefix);
+// }
 
-for (const file of config.files) {
-    file.uploadPattern = file.uploadPattern.replace('{prefix}', filePrefix);
-}
+// fs.writeFileSync('bintray.json', JSON.stringify(config, null, 2));
+// console.log('Created bintray.json');
 
-fs.writeFileSync('bintray.json', JSON.stringify(config, null, 2));
-
-console.log('Created bintray.json');
+setOutput('package-version', version);
+setOutput('bintray-version', versionName);
+setOutput('upload-path', filePrefix);

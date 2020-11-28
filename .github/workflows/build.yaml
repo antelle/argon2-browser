@@ -1,9 +1,5 @@
 name: Build
-on:
-  push:
-    branches:
-#      - master
-  pull_request:
+on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,30 +7,29 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Install prerequisites
-        run: ci/install.sh
+#      - name: Install prerequisites
+#        run: ci/install.sh
       - name: NPM install
         run: npm ci
-      - name: Build
-        run: source emsdk/emsdk_env.sh && ./build.sh
+#      - name: Build
+#        run: source emsdk/emsdk_env.sh && ./build.sh
       - name: Test
         run: npm test
       - name: Prepare deployment
+        id: prepare-deployment
         run: npm run prepare-deployment
       - name: Package
         run: npm pack
-#      - name: Get NPM version
-#        id: package-version
-#        uses: martinbeentjes/npm-get-version-action@master
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Upload to Bintray
+        uses: bpicode/github-action-upload-bintray@master
         with:
-          name: package
-          if-no-files-found: error
-          path: |
-            README.md
-            package.json
-            lib/argon2.js
-            dist/argon2.wasm
-            dist/argon2-simd.wasm
-            dist/argon2.js
+          file: argon2-browser-${{ steps.prepare-deployment.outputs.package-version }}.tgz
+          api_user: antelle
+          api_key: ${{ secrets.BINTRAY_API_KEY }}
+          repository_user: antelle
+          repository: generic
+          package: argon2-browser
+          version: ${{ steps.prepare-deployment.outputs.bintray-version }}
+          upload_path: ${{ steps.prepare-deployment.outputs.upload-path }}
+          publish: 1
+          calculate_metadata: true
