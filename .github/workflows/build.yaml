@@ -24,6 +24,7 @@ jobs:
       - name: Package
         run: npm pack
       - name: Get NPM version
+        id: package-version
         uses: martinbeentjes/npm-get-version-action@master
       - name: Upload artifact
         uses: actions/upload-artifact@v1
