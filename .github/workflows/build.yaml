@@ -31,6 +31,6 @@ jobs:
           repository: generic
           package: argon2-browser
           version: ${{ steps.prepare-deployment.outputs.bintray-version }}
-          upload_path: ${{ steps.prepare-deployment.outputs.upload-path }}
+          upload_path: argon2-browser/${{ steps.prepare-deployment.outputs.upload-path }}
           publish: 1
           calculate_metadata: false
