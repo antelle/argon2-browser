@@ -1,9 +1,9 @@
 name: Build
 on:
-  - push:
-    - tags-ignore:
+  push:
+    tags-ignore:
       - '**'
-  - pull_request:
+  pull_request:
 jobs:
   build:
     runs-on: ubuntu-latest
