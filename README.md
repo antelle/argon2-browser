@@ -43,9 +43,11 @@ Environment:
 
 ## Code size
 
+`ll -h dist`
+
 | File        | Code size, kB |
 |-------------|---------------|
-| argon2.js   | 16            |
+| argon2.js   | 14            |
 | argon2.wasm | 25            |
 
 ## Is Argon2 modified?
