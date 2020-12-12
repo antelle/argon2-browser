@@ -9,24 +9,13 @@ const date = new Date().toISOString().split('T')[0];
 
 const commit = execSync('git rev-parse HEAD').toString().trim();
 const branch = execSync('git branch --show-current').toString().trim();
-let tag;
-try {
-    tag = execSync('git describe --exact-match --tags', {
-        stdio: 'ignore',
-    })
-        .toString()
-        .trim();
-} catch {}
 
 const fileSafeBranch = branch.replace(/[^\w.]+/g, '_');
 
-const filePrefix = tag || `branch/${fileSafeBranch}/${version}/${commit}`;
+const filePrefix = `branch/${fileSafeBranch}/${version}/${commit}`;
 const versionName = filePrefix.replace(/\//g, '-');
 
-console.log(
-    `Preparing deployment for commit ${commit} on ${branch} ` +
-        (tag ? 'and tag ' + tag : 'without tag')
-);
+console.log(`Preparing deployment for commit ${commit} on ${branch}`);
 
 const shaSums = execSync('shasum dist/argon2.*').toString();
 console.log(`Release checksums:\n${shaSums}`);
