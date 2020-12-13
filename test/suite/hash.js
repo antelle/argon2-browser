@@ -113,6 +113,20 @@ describe('argon2.hash', function () {
         );
     });
 
+    it('should compute hash with 1GB memory', async function () {
+        this.timeout(30000);
+
+        const hash = await argon2.hash({
+            pass: 'p@ssw0rd',
+            salt: 'somesalt',
+            mem: 1024 * 1024,
+        });
+        assert.strictEqual(
+            hash.encoded,
+            '$argon2d$v=19$m=1048576,t=1,p=1$c29tZXNhbHQ$pqFpxcC+pJwEsSc8+YIkg5pnrNye8EDt'
+        );
+    });
+
     it('should compute hash with different length', async function () {
         const hash = await argon2.hash({
             pass: 'p@ssw0rd',
