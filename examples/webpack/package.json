@@ -11,11 +11,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "argon2-browser": "^1.13.0",
+    "argon2-browser": "^1.15.3",
     "base64-loader": "^1.0.0",
-    "webpack": "^4.44.1"
+    "webpack": "^5.10.1"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.2.0"
   }
 }

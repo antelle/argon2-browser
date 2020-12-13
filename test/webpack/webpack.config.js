@@ -6,30 +6,30 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: 'dist/',
-        filename: 'bundle.js'
-    },
-    node: {
-        __dirname: false,
-        fs: 'empty',
-        Buffer: false,
-        process: false
+        filename: 'bundle.js',
     },
     resolve: {
         alias: {
-            'argon2-browser': path.resolve(__dirname, '../..')
-        }
+            'argon2-browser': path.resolve(__dirname, '../..'),
+        },
+        fallback: {
+            path: false,
+            fs: false,
+            Buffer: false,
+            process: false,
+        },
     },
     module: {
         noParse: /\.wasm$/,
         rules: [
             {
                 test: /\.wasm$/,
-                loaders: ['base64-loader'],
-                type: 'javascript/auto'
-            }
-        ]
+                loader: 'base64-loader',
+                type: 'javascript/auto',
+            },
+        ],
     },
     performance: {
-        hints: false
-    }
+        hints: false,
+    },
 };

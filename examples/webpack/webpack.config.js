@@ -16,18 +16,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: 'dist/',
-        filename: 'bundle.js'
-    },
-    // We're using different node.js modules in our code,
-    // this prevents WebPack from failing on them or embedding
-    // polyfills for them into the bundle.
-    //
-    // Error: Module not found: Error: Can't resolve 'fs'
-    node: {
-        __dirname: false,
-        fs: 'empty',
-        Buffer: false,
-        process: false
+        filename: 'bundle.js',
     },
     module: {
         // Makes WebPack think that we don't need to parse this module,
@@ -40,13 +29,26 @@ module.exports = {
                 test: /\.wasm$/,
                 // Tells WebPack that this module should be included as
                 // base64-encoded binary file and not as code
-                loaders: ['base64-loader'],
+                loader: 'base64-loader',
                 // Disables WebPack's opinion where WebAssembly should be,
                 // makes it think that it's not WebAssembly
                 //
                 // Error: WebAssembly module is included in initial chunk.
-                type: 'javascript/auto'
-            }
-        ]
-    }
+                type: 'javascript/auto',
+            },
+        ],
+    },
+    resolve: {
+        // We're using different node.js modules in our code,
+        // this prevents WebPack from failing on them or embedding
+        // polyfills for them into the bundle.
+        //
+        // Error: Module not found: Error: Can't resolve 'fs'
+        fallback: {
+            path: false,
+            fs: false,
+            Buffer: false,
+            process: false,
+        },
+    },
 };
