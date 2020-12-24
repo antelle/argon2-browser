@@ -131,6 +131,11 @@ You can use this module in several ways:
 3. in vanilla js: [example](examples/vanilla);
 4. in node.js: [example](examples/node) (see a note below).
 
+## Bundlers
+
+- WebPack: [examples/webpack](https://github.com/antelle/argon2-browser/tree/master/examples/webpack)
+- create-react-app: [#38](https://github.com/antelle/argon2-browser/issues/38#issuecomment-749690581)
+
 ## Node.js support
 
 Of course you [can use](examples/node) generated WASM in node.js, but it's not sensible: you will get much better speed by compiling it as a native node.js addon, which is not that hard. Wait, it's already done, just install [this package](https://github.com/ranisalt/node-argon2).
