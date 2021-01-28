@@ -5,8 +5,6 @@ const { setOutput } = require('@actions/core');
 const packageJson = require('../package.json');
 const version = packageJson.version;
 
-const date = new Date().toISOString().split('T')[0];
-
 const commit = execSync('git rev-parse HEAD').toString().trim();
 const branch = execSync('git branch --show-current').toString().trim();
 
