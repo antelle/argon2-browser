@@ -134,7 +134,7 @@ You can use this module in several ways:
 ## Bundlers
 
 - WebPack: [examples/webpack](https://github.com/antelle/argon2-browser/tree/master/examples/webpack)
-- create-react-app: [#38](https://github.com/antelle/argon2-browser/issues/38#issuecomment-749690581)
+- create-react-app: [examples/react](https://github.com/antelle/argon2-browser/tree/master/examples/react). Derived from [#38](https://github.com/antelle/argon2-browser/issues/38#issuecomment-749690581)
 
 ## Node.js support
 
