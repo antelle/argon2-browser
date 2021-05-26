@@ -9,8 +9,7 @@
     },
     "scripts": {
         "test": "mocha",
-        "build-bundle": "webpack",
-        "prepare-deployment": "node ci/prepare-deployment"
+        "build-bundle": "webpack"
     },
     "repository": {
         "type": "git",
@@ -23,7 +22,6 @@
     },
     "homepage": "https://github.com/antelle/argon2-browser#readme",
     "devDependencies": {
-        "@actions/core": "^1.3.0",
         "base64-loader": "^1.0.0",
         "chai": "^4.3.4",
         "http-server": "^0.12.3",

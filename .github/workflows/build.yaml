@@ -27,9 +27,8 @@ jobs:
         run: source emsdk/emsdk_env.sh && ./build.sh
       - name: Test
         run: npm test
-      - name: Prepare deployment
-        id: prepare-deployment
-        run: npm run prepare-deployment
+      - name: Bundle
+        run: npm run build-bundle
       - name: Package
         run: npm pack
       - name: Publish to npm
