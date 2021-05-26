@@ -75,9 +75,14 @@ The library can be installed from npm:
 npm install argon2-browser
 ```
 
-Then add script to your HTML or use your favorite bundler:
+Then add this script to your HTML or use your favorite bundler:
 ```html
 <script src="node_modules/argon2-browser/lib/argon2.js"></script>
+```
+
+Alternatively, you can use the bundled version, this way you can include just one script:
+```html
+<script src="node_modules/argon2-browser/dist/argon2-bundled.js"></script>
 ```
 
 Calculate the hash:

@@ -48,5 +48,4 @@ for (const file of [
 console.log(`File growth is within ${maxFileGrowth}%, proceeding.\n`);
 
 setOutput('package-version', version);
-setOutput('bintray-version', versionName);
 setOutput('upload-path', filePrefix);

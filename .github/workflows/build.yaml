@@ -27,16 +27,3 @@ jobs:
         run: npm run prepare-deployment
       - name: Package
         run: npm pack
-      - name: Upload to Bintray
-        uses: bpicode/github-action-upload-bintray@master
-        with:
-          file: argon2-browser-${{ steps.prepare-deployment.outputs.package-version }}.tgz
-          api_user: antelle
-          api_key: ${{ secrets.BINTRAY_API_KEY }}
-          repository_user: antelle
-          repository: generic
-          package: argon2-browser
-          version: ${{ steps.prepare-deployment.outputs.bintray-version }}
-          upload_path: argon2-browser/${{ steps.prepare-deployment.outputs.upload-path }}
-          publish: 1
-          calculate_metadata: false
