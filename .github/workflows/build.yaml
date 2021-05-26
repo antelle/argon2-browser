@@ -16,6 +16,11 @@ jobs:
           submodules: true
       - name: Install prerequisites
         run: ci/install.sh
+      - name: Upgrade Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
       - name: NPM install
         run: npm ci
       - name: Build
@@ -27,3 +32,8 @@ jobs:
         run: npm run prepare-deployment
       - name: Package
         run: npm pack
+      - name: Publish to npm
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
