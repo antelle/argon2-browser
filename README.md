@@ -112,7 +112,7 @@ argon2.hash({
     parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
     secret: new Uint8Array([...]), // optional secret data
     ad: new Uint8Array([...]), // optional associated data
-    type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i
+    type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i or argon2.ArgonType.Argon2id
 })
 // result
 .then(res => {
