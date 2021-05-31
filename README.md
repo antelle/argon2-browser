@@ -109,10 +109,33 @@ argon2.hash({
     time: 1, // the number of iterations
     mem: 1024, // used memory, in KiB
     hashLen: 24, // desired hash length
-    parallelism: 1, // desired parallelism (will be computed in parallel only for PNaCl)
+    parallelism: 1, // desired parallelism (it won't be computed in parallel, however)
     secret: new Uint8Array([...]), // optional secret data
     ad: new Uint8Array([...]), // optional associated data
-    type: argon2.ArgonType.Argon2d, // or argon2.ArgonType.Argon2i or argon2.ArgonType.Argon2id
+    type: argon2.ArgonType.Argon2d, // Argon2d, Argon2i, Argon2id
+})
+// result
+.then(res => {
+    res.hash // hash as Uint8Array
+    res.hashHex // hash as hex-string
+    res.encoded // encoded hash, as required by argon2
+})
+// or error
+.catch(err => {
+    err.message // error message as string, if available
+    err.code // numeric error code
+})
+```
+
+```javascript
+argon2.verify({
+    // required
+    pass: 'password',
+    encoded: 'enc-hash',
+    // optional
+    secret: new Uint8Array([...]), // optional secret data
+    ad: new Uint8Array([...]), // optional associated data
+    type: argon2.ArgonType.Argon2d, // Argon2d, Argon2i, Argon2id. default: guess
 })
 // result
 .then(res => {
