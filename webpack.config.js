@@ -4,8 +4,11 @@ module.exports = {
     mode: 'production',
     entry: './lib/argon2.js',
     output: {
-        library: 'argon2',
-        libraryTarget: 'umd',
+        library: {
+            name: 'argon2',
+            type: 'umd',
+        },
+        globalObject: 'this',
         path: path.resolve(__dirname, 'dist'),
         publicPath: 'dist/',
         filename: 'argon2-bundled.min.js',
