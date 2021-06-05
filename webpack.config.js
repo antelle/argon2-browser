@@ -23,6 +23,10 @@ module.exports = {
             },
         ],
     },
+    externals: {
+        path: 'path',
+        fs: 'fs',
+    },
     resolve: {
         fallback: {
             path: false,
