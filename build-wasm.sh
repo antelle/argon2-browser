@@ -17,7 +17,7 @@ cmake \
     -DCMAKE_EXE_LINKER_FLAGS="-O3 --memory-init-file 0 \
                               -s NO_FILESYSTEM=1 \
                               -s 'EXPORTED_FUNCTIONS=[\"_argon2_hash\",\"_argon2_hash_ext\",\"_argon2_verify\",\"_argon2_verify_ext\",\"_argon2_error_message\",\"_argon2_encodedlen\",\"_malloc\",\"_free\"]' \
-                              -s 'EXTRA_EXPORTED_RUNTIME_METHODS=[\"UTF8ToString\",\"allocate\",\"ALLOC_NORMAL\"]' \
+                              -s 'EXPORTED_RUNTIME_METHODS=[\"UTF8ToString\",\"allocate\",\"ALLOC_NORMAL\"]' \
                               -s DEMANGLE_SUPPORT=0 \
                               -s ASSERTIONS=0 \
                               -s NO_EXIT_RUNTIME=1 \
