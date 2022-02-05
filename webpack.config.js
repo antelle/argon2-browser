@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -23,10 +24,11 @@ module.exports = {
             },
         ],
     },
-    externals: {
-        path: 'path',
-        fs: 'fs',
-    },
+    plugins: [
+        new webpack.DefinePlugin({
+            IS_WASM_INLINED: true,
+        }),
+    ],
     resolve: {
         fallback: {
             path: false,

@@ -1,8 +1,8 @@
-describe('Node.js', function() {
+describe('Node.js bundled', function () {
     global.chai = require('chai');
 
     before(() => {
-        global.argon2 = require('..');
+        global.argon2 = require('../dist/argon2-bundled.min');
     });
 
     ['./suite/hash', './suite/verify'].forEach((name) => {
