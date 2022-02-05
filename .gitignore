@@ -30,3 +30,5 @@ test/webpack/node_modules/
 test/webpack/dist/
 *.tgz
 package/
+em-post_js_tracker.c
+libargon2_1_em-post_js.a
