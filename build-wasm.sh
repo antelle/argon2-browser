@@ -32,4 +32,3 @@ shasum dist/argon2.js
 shasum dist/argon2.wasm
 
 perl -pi -e 's/typeof Module!=="undefined"\?Module:\{};/typeof self!=="undefined"&&typeof self.Module!=="undefined"?self.Module:{};var jsModule=Module;/g' dist/argon2.js
-perl -pi -e 's/receiveInstantiatedSource\(output\)\{/receiveInstantiatedSource(output){Module=jsModule;if(typeof self!=="undefined")self.Module=Module;/g' dist/argon2.js
