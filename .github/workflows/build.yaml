@@ -25,10 +25,10 @@ jobs:
         run: npm ci
       - name: Build
         run: source emsdk/emsdk_env.sh && ./build.sh
+      - name: Bundle
+        run: npm run build
       - name: Test
         run: npm test
-      - name: Bundle
-        run: npm run build-bundle
       - name: Package
         run: npm pack
       - name: Publish to npm
