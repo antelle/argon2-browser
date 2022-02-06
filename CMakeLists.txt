@@ -31,6 +31,3 @@ endif()
 add_executable(argon2 ${sources})
 
 set_target_properties(argon2 PROPERTIES OUTPUT_NAME ${OUTPUT_NAME})
-
-em_link_pre_js(argon2 lib/em-pre.js)
-em_link_post_js(argon2 lib/em-post.js)

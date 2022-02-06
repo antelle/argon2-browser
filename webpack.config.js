@@ -19,6 +19,11 @@ const getConfig = (inlineWasm) => ({
             test: /\.wasm$/,
             loader: inlineWasm ? 'base64-loader' : 'null-loader',
             type: 'javascript/auto',
+        }, {
+            test: /dist\/argon2\.js$/,
+            use: [{
+                loader: path.resolve('wrap-em.js'),
+            }]
         }],
     },
     externals: {
