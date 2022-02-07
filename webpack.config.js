@@ -32,10 +32,12 @@ const getConfig = (inlineWasm) => ({
             IS_WASM_INLINED: JSON.stringify(inlineWasm),
         }),
     ],
-    externals: {
-        path: 'path',
-        fs: 'fs',
-    },
+    externals: inlineWasm
+        ? {}
+        : {
+            path: 'path',
+            fs: 'fs',
+        },
     resolve: {
         fallback: {
             path: false,
