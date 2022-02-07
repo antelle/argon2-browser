@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const getConfig = (inlineWasm) => ({
     mode: 'production',
@@ -26,6 +27,11 @@ const getConfig = (inlineWasm) => ({
             }]
         }],
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            IS_WASM_INLINED: JSON.stringify(inlineWasm),
+        }),
+    ],
     externals: {
         path: 'path',
         fs: 'fs',
