@@ -30,6 +30,7 @@ const getConfig = (inlineWasm) => ({
     plugins: [
         new webpack.DefinePlugin({
             IS_WASM_INLINED: JSON.stringify(inlineWasm),
+            ...inlineWasm && { process: 'undefined' },
         }),
     ],
     externals: inlineWasm
