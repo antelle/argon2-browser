@@ -1,6 +1,7 @@
 const path = require('path');
+const webpack = require('webpack');
 
-module.exports = {
+const getConfig = (inlineWasm) => ({
     mode: 'production',
     entry: './lib/argon2.js',
     output: {
@@ -11,22 +12,33 @@ module.exports = {
         globalObject: 'this',
         path: path.resolve(__dirname, 'dist'),
         publicPath: 'dist/',
-        filename: 'argon2-bundled.min.js',
+        filename: inlineWasm ? 'argon2-bundled.min.js' : 'argon2.min.js',
     },
     module: {
         noParse: /\.wasm$/,
-        rules: [
-            {
-                test: /\.wasm$/,
-                loader: 'base64-loader',
-                type: 'javascript/auto',
-            },
-        ],
+        rules: [{
+            test: /\.wasm$/,
+            loader: inlineWasm ? 'base64-loader' : 'null-loader',
+            type: 'javascript/auto',
+        }, {
+            test: /dist\/argon2\.js$/,
+            use: [{
+                loader: path.resolve('wrap-em.js'),
+            }]
+        }],
     },
-    externals: {
-        path: 'path',
-        fs: 'fs',
-    },
+    plugins: [
+        new webpack.DefinePlugin({
+            IS_WASM_INLINED: JSON.stringify(inlineWasm),
+            ...inlineWasm && { process: 'undefined' },
+        }),
+    ],
+    externals: inlineWasm
+        ? {}
+        : {
+            path: 'path',
+            fs: 'fs',
+        },
     resolve: {
         fallback: {
             path: false,
@@ -35,4 +47,7 @@ module.exports = {
             process: false,
         },
     },
-};
+    node: false,
+});
+
+module.exports = [getConfig(true), getConfig(false)];
