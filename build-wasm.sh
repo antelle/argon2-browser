@@ -33,5 +33,6 @@ shasum dist/argon2.wasm
 
 perl -pi -e 's/"argon2.js.mem"/null/g' dist/argon2.js
 perl -pi -e 's/$/if(typeof module!=="undefined")module.exports=Module;Module.unloadRuntime=function(){if(typeof self!=="undefined"){delete self.Module}Module=jsModule=wasmMemory=wasmTable=asm=buffer=HEAP8=HEAPU8=HEAP16=HEAPU16=HEAP32=HEAPU32=HEAPF32=HEAPF64=undefined;if(typeof module!=="undefined"){delete module.exports}};/' dist/argon2.js
-perl -pi -e 's/typeof Module!=="undefined"\?Module:\{};/typeof self!=="undefined"&&typeof self.Module!=="undefined"?self.Module:{};var jsModule=Module;/g' dist/argon2.js
+perl -pi -e 's/typeof Module!="undefined"\?Module:\{};/typeof self!=="undefined"&&typeof self.Module!=="undefined"?self.Module:{};var jsModule=Module;/g' dist/argon2.js
 perl -pi -e 's/receiveInstantiatedSource\(output\)\{/receiveInstantiatedSource(output){Module=jsModule;if(typeof self!=="undefined")self.Module=Module;/g' dist/argon2.js
+perl -pi -e 's/argon2.wasm/argon2-simd.wasm/g' dist/argon2.js
